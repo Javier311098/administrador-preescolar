@@ -1,13 +1,34 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.texto-center {
+  font-weight: bold;
+  margin: auto;
+  text-align: center;
+}
+
+.mt-sm {
+  margin-top: 8px;
+}
+
+.mt-md {
+  margin-top: 12px;
+}
+
+.mt-lg {
+  margin-top: 16px;
+}
+
+/* estilos de chatbot */
+
+.react-chatbot-kit-chat-header {
+  background-color: #0e53d1;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
 }

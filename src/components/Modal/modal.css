@@ -1,0 +1,50 @@
+.modal-background {
+  user-select: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: black;
+  transition: 0.8s ease;
+}
+.modal-container {
+  font-size: 24px;
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  min-width: 50%;
+  transform: scale(0);
+  animation: modal 0.2s ease-in forwards;
+  animation-delay: 0.1s;
+}
+.modal-header {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  /* font-family: $font-title; */
+  font-size: 30px;
+  font-weight: bold;
+  padding: 8px;
+}
+.modal-dismiss {
+  background-color: transparent;
+  border: none;
+}
+
+.modal-body {
+  padding: 5px;
+}
+@keyframes modal {
+  0% {
+    transform: scaleY(0) scaleX(0);
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+  }
+}

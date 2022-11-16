@@ -32,3 +32,25 @@
   color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.body-container {
+  border: 1px solid cadetblue;
+  height: 70vh;
+  width: 100%;
+  margin: 5px;
+  display: grid;
+  grid-gap: 10px;
+  justify-items: center;
+  grid-auto-rows: 450px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  overflow-y: scroll;
+}
+
+.lista-container {
+  border: 1px solid cadetblue;
+  height: 70vh;
+  width: 100%;
+  margin: 5px;
+  justify-items: center;
+  overflow-y: scroll;
+}

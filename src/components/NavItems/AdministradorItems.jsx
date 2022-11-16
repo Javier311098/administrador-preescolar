@@ -1,24 +1,18 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export const AdministradorItems = () => {
   return (
     <>
-      <li class="nav-item">
-        <a class="nav-link active " aria-current="page" href="#">
-          Registrar Asesoria
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link  " aria-current="page" href="#">
-          Registrar Maestro
-        </a>
-      </li>
-
-      <li class="nav-item">
-        <a class="nav-link  " aria-current="page" href="#">
-          Registrar Materia
-        </a>
-      </li>
+      <NavLink to="administradores/usuarios" className="nav-link">
+        Usuarios
+      </NavLink>
+      <NavLink to="/maestros/calendario" className="nav-link">
+        Materias
+      </NavLink>
+      <NavLink to="/maestros/calendario" className="nav-link">
+        Docentes
+      </NavLink>
     </>
   );
 };

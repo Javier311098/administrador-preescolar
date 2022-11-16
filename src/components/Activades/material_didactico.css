@@ -1,0 +1,34 @@
+.imagen-container {
+  width: 70%;
+  height: 150px;
+}
+
+.imagenes {
+  width: 120px;
+  border: 2px solid black;
+  height: 120px;
+  font-size: 18px;
+}
+
+.imagenes:hover {
+  cursor: pointer;
+  background-color: #0275d8;
+  color: white;
+}
+
+.mostrar-imagen {
+  width: 500px;
+  height: 500px;
+  cursor: pointer;
+}
+
+.material-img-container {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 700px) {
+  .material-img-container {
+    flex-direction: column;
+  }
+}

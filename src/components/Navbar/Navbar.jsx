@@ -1,27 +1,33 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { AdministradorItems } from "../NavItems/AdministradorItems";
-import { MaestroItems } from "../NavItems/MaestroItems";
-import { Routes, Route } from "react-router-dom";
-import { CalendarioScreen } from "../Calendario/CalendarioScreen";
+import React, { useState } from "react";
+import { useAuthStore } from "../../hooks/useAuthStore";
+import { Items } from "../NavItems/Items";
+import { NavbarCelular } from "./NavbarCelular";
 
-export const Navbar = ({ permiso }) => {
-  let navigate = useNavigate();
-  const cerrarSesion = () => {
-    navigate("/");
+export const Navbar = () => {
+  const [showSide, setShowSide] = useState(false);
+  const { user } = useAuthStore();
+  const mostrar = () => {
+    setShowSide(!showSide);
   };
-
+  const titleCase = (string) => {
+    if (string !== undefined) {
+      const sentence = string.toLowerCase().split(" ");
+      for (let i = 0; i < sentence.length; i++) {
+        sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1) + " ";
+      }
+      return sentence;
+    }
+  };
   return (
     <>
-      <Routes>
-        <Route path="calendario" element={<CalendarioScreen />} />
-      </Routes>
-
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-          <p className="text-white texto-center fs-5">Bienvenido Juan</p>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-primary ">
+        <div className="container-fluid">
+          <p className="text-white texto-center fs-5">
+            Bienvenido {titleCase(user.nombre)}
+          </p>
           <button
-            class="navbar-toggler"
+            onClick={mostrar}
+            className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent"
@@ -29,19 +35,17 @@ export const Navbar = ({ permiso }) => {
             aria-expanded="false"
             aria-label="Toggle navigation"
           >
-            <span class="navbar-toggler-icon"></span>
+            <span className="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              {permiso === "admin" && <AdministradorItems />}
-              {permiso === "maestro" && <MaestroItems />}
+          <div className="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <Items />
             </ul>
           </div>
-          <button onClick={cerrarSesion} className="btn btn-dark">
-            Cerrar Sesion
-          </button>
         </div>
       </nav>
+
+      {showSide && <NavbarCelular />}
     </>
   );
 };

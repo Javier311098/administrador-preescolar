@@ -1,80 +1,86 @@
-import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "../../hooks/useForm";
-import { BiBot } from "react-icons/bi";
+import { checarAutentificacion } from "../../store/auth/thunks";
 import "./login.css";
-import logo from "../../imagenes/unedl.png";
-import Chatbot from "react-chatbot-kit";
 import "react-chatbot-kit/build/main.css";
-import config from "../Chatbot/config";
-import MessageParser from "../Chatbot/MessageParser";
-import ActionProvider from "../Chatbot/ActionProvider";
+import { Grid, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../../hooks/useAuthStore";
+import Swal from "sweetalert2";
+
+const validaciones = {
+  email: [(value) => value.includes("@"), "Ingrese un correo valido"],
+  password: [(value) => value.length > 0, "Ingrese la contraseña"],
+};
 
 export const LoginScreen = () => {
   let navigate = useNavigate();
-  const [mostrarBot, setMostrarBot] = useState(false);
-  const [formLoginValues, handleLoginInputChange] = useForm({
-    email: "",
-    password: "",
-  });
+  const dispatch = useDispatch();
+
+  const { startLogin, errorMessage } = useAuthStore();
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formLoginValues, handleLoginInputChange, validacion, isValid] =
+    useForm(
+      {
+        email: "",
+        password: "",
+      },
+      validaciones
+    );
 
   const { email, password } = formLoginValues;
+  const { emailValid, passwordValid } = validacion;
+
+  useEffect(() => {
+    if (errorMessage !== undefined) {
+      Swal.fire("Error en la autentificacion", errorMessage, "error");
+    }
+  }, [errorMessage]);
 
   const submit = (e) => {
     e.preventDefault();
-    navigate("maestros");
+    setFormSubmitted(true);
+    if (isValid) {
+      startLogin({ email, password });
+      dispatch(checarAutentificacion());
+    }
   };
 
   return (
     <>
       <div className="center">
-        <h1>Asesorias Academicas</h1>
-        <img className="image-size" src={logo} alt="logo" />
+        <h1>Administracion Preescolar</h1>
 
         <form onSubmit={submit} className="form-container">
-          <label className="form-label">Correo Electronico</label>
-          <input
-            title="Tooltip on right"
-            type="email"
-            className="form-control"
-            placeholder="name@example.com"
-            name="email"
-            value={email}
-            onChange={handleLoginInputChange}
-          />
+          <Grid item xs={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Correo Electronico"
+              type="email"
+              placeholder="name@example.com"
+              name="email"
+              value={email}
+              onChange={handleLoginInputChange}
+              error={!!emailValid && formSubmitted}
+              helperText={formSubmitted && emailValid}
+            />
+          </Grid>
+          <Grid item xs={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Contraseña"
+              type="password"
+              name="password"
+              value={password}
+              onChange={handleLoginInputChange}
+              error={!!passwordValid && formSubmitted}
+              helperText={formSubmitted && passwordValid}
+            />
+          </Grid>
 
-          <label className="form-label">Contraseña</label>
-          <input
-            type="password"
-            className="form-control"
-            name="password"
-            value={password}
-            onChange={handleLoginInputChange}
-          />
           <button className="btn btn-primary mt-3" type="submit">
             Iniciar Sesion
           </button>
         </form>
-        <button
-          className="mt-3 btn btn-primary btn-circle "
-          data-bs-toggle="tooltip"
-          data-bs-placement="bottom"
-          title="Yo te puedo ayudar"
-          onClick={() => setMostrarBot((prev) => !prev)}
-        >
-          <BiBot size={35} />
-        </button>
-        {mostrarBot && (
-          <div className="chat">
-            <Chatbot
-              config={config}
-              messageParser={MessageParser}
-              actionProvider={ActionProvider}
-              headerText="UNEDL Chatbot"
-              placeholderText="escribe tu pregunta..."
-            />
-          </div>
-        )}
       </div>
     </>
   );

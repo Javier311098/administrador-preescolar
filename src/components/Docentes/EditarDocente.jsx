@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "../../hooks/useForm";
 
-export const EditarMaestro = () => {
+export const EditarDocente = () => {
   const [formLoginValues, handleLoginInputChange] = useForm({
     nombre: "",
     email: "",

@@ -1,72 +1,88 @@
 import { Grid, MenuItem, TextField } from "@mui/material";
 import { useRef, useState } from "react";
+import DatePicker, { registerLocale } from "react-datepicker";
+import { FormLabel } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
-import { comenzarCrearPadre } from "../../store/slicers/padreActions";
+import { comenzarCrearAlumno } from "../../store/slicers/alumnosActions";
+import "react-datepicker/dist/react-datepicker.css";
+import es from "date-fns/locale/es";
 const validaciones = {
   nombre: [
     (value) => value.length > 3,
     "El nombre debe tener al menos 4 caracteres",
   ],
-  telefono: [(value) => value.length > 8, "Debe ingresar un telefono"],
-
-  correoElectronico: [
-    (value) => value.length > 6,
-    "Debe ingresar un correo valido",
+  direccion: [(value) => value.length > 8, "Debe ingresar una direccion"],
+  telefonoEmergencia: [
+    (value) => value.length > 9,
+    "Debe ingresar al menos un telefono de emergencia",
   ],
-  passwordUsuario: [
-    (value) => value.length > 0,
-    "Debe ingresar una contraseña",
-  ],
+  tipoSangre: [(value) => value.length > 0, "Debe ingresar el tipo de sangre"],
   edad: [(value) => value > 0, "Debe ingresar la edad"],
-  grado: [(value) => value > 0, "Debe elegir un grado"],
+  grado: [(value) => value > 0, "Debe asignarle un grado"],
 };
 
-export const AgregarDocente = ({ cerrarModales }) => {
+const tipo = ["A+", "A-", "O+", "O-", "AB+", "AB-", "B+", "B-"];
+
+export const AgregarAlumno = ({ cerrarModales }) => {
+  registerLocale("es", es);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { listaGrados } = useSelector((state) => state.grados);
   const fileInputRef1 = useRef();
   const [img1, setImg1] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState(new Date());
   const [formLoginValues, handleLoginInputChange, validacion, isValid] =
     useForm(
       {
         nombre: "",
-        telefono: "",
-        correoElectronico: "",
-        passwordUsuario: "",
+        direccion: "",
+        telefonoEmergencia: "",
+        telefonoEmergencia2: "",
+        tipoSangre: "",
+        edad: 3,
+        fechaNacimiento: Date.now(),
+        foto: "",
         grado: "",
-        edad: 25,
       },
       validaciones
     );
 
-  const { nombre, telefono, correoElectronico, passwordUsuario, grado, edad } =
-    formLoginValues;
+  const {
+    nombre,
+    direccion,
+    telefonoEmergencia,
+    telefonoEmergencia2,
+    tipoSangre,
+    edad,
+    grado,
+  } = formLoginValues;
 
   const {
     nombreValid,
-    telefonoValid,
-    correoElectronicoValid,
-    passwordUsuarioValid,
-    gradoValid,
+    direccionValid,
+    telefonoEmergenciaValid,
+    tipoSangreValid,
     edadValid,
+    gradoValid,
   } = validacion;
   const dispach = useDispatch();
   const submit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
     if (isValid) {
-      const padre = {
+      const alumno = {
         nombre_usuario: nombre,
-        telefono: telefono,
-        correo_electronico: correoElectronico,
-        password_usuario: passwordUsuario,
-        id_rol: 2,
+        direccion_residencia: direccion,
+        telefono_emergencia_1: telefonoEmergencia,
+        telefono_emergencia_2: telefonoEmergencia2,
+        tipo_sangre: tipoSangre,
         edad: edad,
+        id_rol: 3,
+        id_grado: grado,
+        fecha_nacimiento: fechaNacimiento,
         foto_usuario: img1,
       };
-      const idGrado = grado;
-      dispach(comenzarCrearPadre(padre, idGrado));
+      dispach(comenzarCrearAlumno(alumno));
       cerrarModales();
     }
   };
@@ -80,14 +96,18 @@ export const AgregarDocente = ({ cerrarModales }) => {
     };
   };
 
+  const handleFechaInicio = (date) => {
+    setFechaNacimiento(date);
+  };
+
   return (
     <>
-      <form onSubmit={submit} className="form-padre ">
-        <div className="form-padre ">
-          <div className="padre-form-derecho">
+      <form onSubmit={submit} className="form-alumno ">
+        <div className="form-alumno ">
+          <div className="alumno-form-derecho">
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
-                label="Nombre del Docente"
+                label="Nombre del Alumno"
                 type="text"
                 placeholder="juan perez perez"
                 name="nombre"
@@ -100,44 +120,63 @@ export const AgregarDocente = ({ cerrarModales }) => {
             </Grid>
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
-                label="Telefono"
+                label="Direccion"
                 type="text"
-                placeholder="33-33-33-33-33"
-                name="telefono"
-                value={telefono}
+                placeholder="avenida siempre viva 777"
+                name="direccion"
+                value={direccion}
                 fullWidth
                 onChange={handleLoginInputChange}
-                error={!!telefonoValid && formSubmitted}
-                helperText={formSubmitted && telefonoValid}
+                error={!!direccionValid && formSubmitted}
+                helperText={formSubmitted && direccionValid}
               />
             </Grid>
 
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
-                label="Correo Electronico"
-                type="email"
-                placeholder="juan@example.com"
-                name="correoElectronico"
-                value={correoElectronico}
+                label="Telefono de Emergencia"
+                type="text"
+                placeholder="33-33-33-33-33"
+                name="telefonoEmergencia"
+                value={telefonoEmergencia}
                 fullWidth
                 onChange={handleLoginInputChange}
-                error={!!correoElectronicoValid && formSubmitted}
-                helperText={formSubmitted && correoElectronicoValid}
+                error={!!telefonoEmergenciaValid && formSubmitted}
+                helperText={formSubmitted && telefonoEmergenciaValid}
               />
             </Grid>
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
-                label="Contraseña"
-                type="password"
-                placeholder="*********"
-                name="passwordUsuario"
-                value={passwordUsuario}
+                label="Segundo telefono de emergencia"
+                type="text"
+                placeholder="33-33-33-33-33"
+                name="telefonoEmergencia2"
+                value={telefonoEmergencia2}
                 fullWidth
                 onChange={handleLoginInputChange}
-                error={!!passwordUsuarioValid && formSubmitted}
-                helperText={formSubmitted && passwordUsuarioValid}
               />
             </Grid>
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <TextField
+                label="Tipo de Sangre"
+                select
+                type="text"
+                placeholder="A+"
+                name="tipoSangre"
+                value={tipoSangre}
+                fullWidth
+                onChange={handleLoginInputChange}
+                error={!!tipoSangreValid && formSubmitted}
+                helperText={formSubmitted && tipoSangreValid}
+              >
+                {tipo.map((tipo) => (
+                  <MenuItem key={tipo} value={tipo}>
+                    {tipo}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
                 label="Edad"
@@ -152,7 +191,7 @@ export const AgregarDocente = ({ cerrarModales }) => {
               />
             </Grid>
           </div>
-          <div className="padre-form-izquierdo">
+          <div className="alumno-form-izquierdo">
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
                 label="Grado"
@@ -166,15 +205,22 @@ export const AgregarDocente = ({ cerrarModales }) => {
                 helperText={formSubmitted && gradoValid}
               >
                 {listaGrados.map((grado) => (
-                  <MenuItem key={grado.id_usuario} value={grado.id_grado}>
+                  <MenuItem key={grado.id_grado} value={grado.id_grado}>
                     {grado.nombre_grado}
                   </MenuItem>
                 ))}
               </TextField>
             </Grid>
 
+            <FormLabel>Fecha de Nacimiento:</FormLabel>
+            <DatePicker
+              selected={fechaNacimiento}
+              onChange={handleFechaInicio}
+              locale="es"
+              dateFormat="dd//MM/yyyy"
+            />
             <div
-              className="imagen-padre text-center"
+              className="imagen-alumno text-center"
               onClick={() => fileInputRef1.current.click()}
             >
               {img1.length > 0 ? (

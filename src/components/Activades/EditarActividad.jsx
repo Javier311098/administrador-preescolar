@@ -43,11 +43,7 @@ export const EditarActividad = ({ cerrarModales }) => {
     actividadSeleccionada.imagen_1 ? actividadSeleccionada.imagen_1 : ""
   );
   const [img2, setImg2] = useState(
-    actividadSeleccionada.imagen_2
-      ? "http://localhost:5000" +
-          actividadSeleccionada.imagen_2 +
-          "imagen1.jpeg"
-      : ""
+    actividadSeleccionada.imagen_2 ? actividadSeleccionada.imagen_2 : ""
   );
   const [archivo, setArchivo] = useState();
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -66,16 +62,8 @@ export const EditarActividad = ({ cerrarModales }) => {
       validaciones
     );
 
-  const {
-    nombre,
-    material,
-    imagen1,
-    imagen2,
-    video,
-    objectivo,
-    instrucciones,
-    materia,
-  } = formLoginValues;
+  const { nombre, material, video, objectivo, instrucciones, materia } =
+    formLoginValues;
   const {
     nombreValid,
     materialValid,
@@ -88,7 +76,7 @@ export const EditarActividad = ({ cerrarModales }) => {
   const submit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
-    console.log(materia);
+
     if (isValid) {
       const actividad = {
         nombre_actividad: nombre,
@@ -97,15 +85,15 @@ export const EditarActividad = ({ cerrarModales }) => {
         instrucciones,
         id_materia: materia,
         video: video,
-        archivo: archivo,
+        imagen_1: img1,
         imagen_2: img2,
       };
-      const form = new FormData();
-      form.append("archivo", archivo);
+      // const form = new FormData(); //para subir el archivo al servidor
+      // form.append("archivo", archivo);
 
-      console.log(actividad);
-      console.log(form);
-      dispatch(comenzarEditarActividad(actividad, id_actividad, form));
+      // console.log(actividad);
+      // console.log(form);
+      dispatch(comenzarEditarActividad(actividad, id_actividad));
       cerrarModales();
     }
   };
@@ -157,8 +145,8 @@ export const EditarActividad = ({ cerrarModales }) => {
             value={material}
             fullWidth
             onChange={handleLoginInputChange}
-            error={!!nombreValid && formSubmitted}
-            helperText={formSubmitted && nombreValid}
+            error={!!materialValid && formSubmitted}
+            helperText={formSubmitted && materialValid}
           />
         </Grid>
 

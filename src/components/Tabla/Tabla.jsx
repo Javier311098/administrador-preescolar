@@ -43,6 +43,7 @@ export const Tabla = ({
   const seleccionEditar = (value) => {
     setModalEditar(true);
     console.log(value);
+    localStorage.setItem("actividad", JSON.stringify(value));
     dispatch(seleccionar(value));
   };
   const seleccionEliminar = (value) => {

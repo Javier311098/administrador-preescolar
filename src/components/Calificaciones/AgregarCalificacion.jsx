@@ -13,7 +13,7 @@ const validaciones = {
   ],
 };
 
-export const AgregarPeriodo = ({ cerrarModales }) => {
+export const AgregarCalificacion = ({ cerrarModales }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [fechaInicio, setFechaInicio] = useState(new Date());
   const [fechaFin, setFechaFin] = useState(new Date());

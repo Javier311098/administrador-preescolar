@@ -72,7 +72,7 @@ export const AgregarActividad = ({ cerrarModales }) => {
         instrucciones,
         id_materia: materia,
         video: video,
-        imagen_1: archivo,
+        imagen_1: img1,
         imagen_2: img2,
       };
       console.log(actividad);
@@ -124,8 +124,8 @@ export const AgregarActividad = ({ cerrarModales }) => {
             value={material}
             fullWidth
             onChange={handleLoginInputChange}
-            error={!!nombreValid && formSubmitted}
-            helperText={formSubmitted && nombreValid}
+            error={!!materialValid && formSubmitted}
+            helperText={formSubmitted && materialValid}
           />
         </Grid>
 

@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { seleccionarPeriodo } from "../../store/slicers/periodosSlice";
+import { seleccionarCalificacion } from "../../store/slicers/calificacionesSlice";
 import { Modal } from "../Modal/Modal";
 import { ModalEliminar } from "../Modal/ModalEliminar";
-import { EditarPeriodo } from "./EditarPeriodo";
-import periodoImg from "../../imagenes/periodo.jpeg";
-import { comenzarBajaPeriodo } from "../../store/slicers/periodosActions";
+import { EditarCalificacion } from "./EditarCalificacion";
+import { comenzarBajaCalificacion } from "../../store/slicers/calificacionesActions";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 
-export const ListaPeriodos = ({ periodos = [] }) => {
+export const ListaCalificaciones = ({ calificaciones = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-  const { periodoSeleccionado } = useSelector((state) => state.periodos);
+  const { calificacionSeleccionado } = useSelector(
+    (state) => state.calificaciones
+  );
   const [data, setData] = useState([]);
   const [term, setTerm] = useState("");
 
   useEffect(() => {
-    setData(periodos);
-  }, [term, periodos]);
+    setData(calificaciones);
+  }, []);
 
   const dispatch = useDispatch();
   const modalOpen = () => {
@@ -26,26 +27,28 @@ export const ListaPeriodos = ({ periodos = [] }) => {
     setModalEliminar(false);
   };
 
-  const seleccionPeriodoEliminar = (value) => {
+  const seleccionCalificacionEliminar = (value) => {
     setModalEliminar(true);
-    dispatch(seleccionarPeriodo(value));
+    dispatch(seleccionarCalificacion(value));
   };
 
-  const seleccionPeriodoEditar = (value) => {
+  const seleccionCalificacionEditar = (value) => {
     setModalEditar(true);
-    dispatch(seleccionarPeriodo(value));
+    dispatch(seleccionarCalificacion(value));
   };
 
   const eliminar = () => {
-    dispatch(comenzarBajaPeriodo(periodoSeleccionado.id_periodo));
+    dispatch(
+      comenzarBajaCalificacion(calificacionSeleccionado.id_calificacion)
+    );
     setModalEliminar(false);
   };
 
   const searchingTerm = (term) => {
     return function (x) {
       return (
-        (x.nombre_periodo &&
-          x.nombre_periodo.toLowerCase().includes(term.toLowerCase())) ||
+        (x.nombre_calificacion &&
+          x.nombre_calificacion.toLowerCase().includes(term.toLowerCase())) ||
         !term
       );
     };
@@ -56,43 +59,47 @@ export const ListaPeriodos = ({ periodos = [] }) => {
       <input
         className="w-50 rounded-2 ms-3 me-3  "
         type="text"
-        placeholder={`Buscar Periodos...`}
+        placeholder={`Buscar calificaciones...`}
         value={term}
         name="term"
         onChange={({ target }) => setTerm(target.value)}
       />
       <div className="body-container ">
-        {periodos.length > 0 ? (
-          data.filter(searchingTerm(term)).map((periodo) => (
+        {calificaciones.length > 0 ? (
+          data.filter(searchingTerm(term)).map((calificacion) => (
             <div
               className="card"
               style={{ width: "18rem" }}
-              key={periodo.id_periodo}
+              key={calificacion.id_calificacion}
             >
-              <img src={periodoImg} className="card-img-top" alt="periodo" />
+              {/* <img
+                src={calificacionImg}
+                className="card-img-top"
+                alt="calificacion"
+              /> */}
               <div className="card-body">
                 <h5 className="card-title">
-                  {periodo.nombre_periodo.toUpperCase()}
+                  {calificacion.nombre_calificacion.toUpperCase()}
                 </h5>
                 <p className="card-text">
                   Fecha de Inicio:
-                  {moment(periodo.inicio_periodo).format("D/MM/yyyy")}
+                  {moment(calificacion.inicio_calificacion).format("D/MM/yyyy")}
                 </p>
                 <p className="card-text">
                   Fecha de Fin:
-                  {moment(periodo.fin_periodo).format("D/MM/yyyy")}
+                  {moment(calificacion.fin_calificacion).format("D/MM/yyyy")}
                 </p>
 
                 <div className="d-flex justify-content-between">
                   <button
                     className="btn btn-warning"
-                    onClick={() => seleccionPeriodoEditar(periodo)}
+                    onClick={() => seleccionCalificacionEditar(calificacion)}
                   >
                     <MdModeEdit />
                   </button>
                   <button
                     className="btn btn-danger"
-                    onClick={() => seleccionPeriodoEliminar(periodo)}
+                    onClick={() => seleccionCalificacionEliminar(calificacion)}
                   >
                     <MdDelete />
                   </button>
@@ -101,14 +108,14 @@ export const ListaPeriodos = ({ periodos = [] }) => {
             </div>
           ))
         ) : (
-          <h2>no hay periodos</h2>
+          <h2>no hay calificaciones</h2>
         )}
       </div>
       <Modal
         show={modalEditar}
         dismiss={modalOpen}
-        header={"Editar Periodo"}
-        body={<EditarPeriodo cerrarModales={modalOpen} />}
+        header={"Editar calificacion"}
+        body={<EditarCalificacion cerrarModales={modalOpen} />}
       />
 
       <ModalEliminar

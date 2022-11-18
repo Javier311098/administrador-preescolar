@@ -1,13 +1,11 @@
 import { Grid, MenuItem, TextField } from "@mui/material";
-import { useEffect } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
 import {
-  comenzarEditarPadre,
-  obtenerRelacionPadre,
+  comenzarCrearPadre,
+  obtenerAlumnosSinRelacion,
 } from "../../store/slicers/padreActions";
-import { Spinner } from "../Spinner/Spinner";
 const validaciones = {
   nombre: [
     (value) => value.length > 3,
@@ -20,34 +18,26 @@ const validaciones = {
     "Debe ingresar un correo valido",
   ],
   passwordUsuario: [
-    (value) => value.length > 5,
+    (value) => value.length > 0,
     "Debe ingresar una contraseña",
   ],
   edad: [(value) => value > 0, "Debe ingresar la edad"],
   alumno: [(value) => value > 0, "Debe elegir un alumno"],
 };
 
-export const EditarPadre = ({ cerrarModales }) => {
+export const AgregarPadre = ({ cerrarModales }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { listaAlumnos } = useSelector((state) => state.alumnos);
-  const { padreSeleccionado, alumnoSeleccionado } = useSelector(
-    (state) => state.padres
-  );
   const fileInputRef1 = useRef();
-  const [img1, setImg1] = useState(
-    padreSeleccionado.foto_usuario !== null
-      ? padreSeleccionado.foto_usuario
-      : ""
-  );
-
+  const [img1, setImg1] = useState("");
   const [formLoginValues, handleLoginInputChange, validacion, isValid] =
     useForm(
       {
-        nombre: padreSeleccionado.nombre_usuario,
-        telefono: padreSeleccionado.telefono,
-        correoElectronico: padreSeleccionado.correo_electronico,
+        nombre: "",
+        telefono: "",
+        correoElectronico: "",
         passwordUsuario: "",
-        alumno: alumnoSeleccionado.id_usuario,
+        alumno: "",
         edad: 20,
       },
       validaciones
@@ -79,15 +69,13 @@ export const EditarPadre = ({ cerrarModales }) => {
         foto_usuario: img1,
       };
       const idAlumno = alumno;
-      dispach(
-        comenzarEditarPadre(padre, padreSeleccionado.id_usuario, idAlumno)
-      );
+      dispach(comenzarCrearPadre(padre, idAlumno));
       cerrarModales();
     }
   };
 
   useEffect(() => {
-    dispach(obtenerRelacionPadre(padreSeleccionado.id_usuario));
+    dispach(obtenerAlumnosSinRelacion());
   }, []);
 
   const cargarImagen = (e) => {
@@ -210,9 +198,8 @@ export const EditarPadre = ({ cerrarModales }) => {
               onChange={cargarImagen}
               style={{ display: "none" }}
             />
-
             <button className="btn btn-primary mt-5" type="submit">
-              Editar
+              Agregar
             </button>
           </div>
         </div>

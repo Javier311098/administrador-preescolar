@@ -1,12 +1,7 @@
 import React, { useEffect } from "react";
-import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
-import { MaterialDidactico } from "../components/Activades/MaterialDidactico";
-import { MaterialDidacticoLista } from "../components/Activades/MaterialDidacticoLista";
-import { ListaAlumnos } from "../components/Alumnos/ListaAlumnos";
-import { ListaMaestros } from "../components/Docentes/ListaMaestros";
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import { LoginScreen } from "../components/Login/LoginScreen";
-import { MateriaScreen } from "../components/Materia/MateriaScreen";
-import { ListaPadres } from "../components/Padres/ListaPadres";
 import { Spinner } from "../components/Spinner/Spinner";
 import { useAuthStore } from "../hooks/useAuthStore";
 import { DashboardRoutes } from "./DashboardRoutes";

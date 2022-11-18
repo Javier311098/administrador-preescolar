@@ -1,9 +1,12 @@
 import { Grid, TextField } from "@mui/material";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
-import { comenzarCrearPeriodo } from "../../store/slicers/periodosActions";
+import { comenzarEditarPeriodo } from "../../store/slicers/periodosActions";
 import DatePicker from "react-datepicker";
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import es from "date-fns/locale/es";
+
 import "react-datepicker/dist/react-datepicker.css";
 import { FormLabel } from "react-bootstrap";
 const validaciones = {
@@ -13,26 +16,30 @@ const validaciones = {
   ],
 };
 
-export const AgregarPeriodo = ({ cerrarModales }) => {
+export const EditarCalificacion = ({ cerrarModales }) => {
+  registerLocale("es", es);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [fechaInicio, setFechaInicio] = useState(new Date());
-  const [fechaFin, setFechaFin] = useState(new Date());
+  const { periodoSeleccionado } = useSelector((state) => state.periodos);
+  const { id_periodo, nombre_periodo, inicio_periodo, fin_periodo } =
+    periodoSeleccionado;
+  const [fechaInicio, setFechaInicio] = useState(new Date(inicio_periodo));
+  const [fechaFin, setFechaFin] = useState(new Date(fin_periodo));
   const [formLoginValues, handleLoginInputChange, validacion, isValid] =
     useForm(
       {
-        nombre: "",
+        nombre: nombre_periodo,
       },
       validaciones
     );
 
-  const { nombre } = formLoginValues;
+  const { nombre, inicio, fin } = formLoginValues;
   const { nombreValid } = validacion;
   const dispach = useDispatch();
   const submit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
     if (isValid) {
-      dispach(comenzarCrearPeriodo(nombre, fechaInicio, fechaFin));
+      dispach(comenzarEditarPeriodo(nombre, fechaInicio, fechaFin, id_periodo));
       cerrarModales();
     }
   };
@@ -76,7 +83,7 @@ export const AgregarPeriodo = ({ cerrarModales }) => {
           dateFormat="dd//MM/yyyy"
         />
         <button className="btn btn-primary mt-3" type="submit">
-          Agregar
+          Editar
         </button>
       </form>
     </>

@@ -57,22 +57,21 @@ export const comenzarCrearActividad = (actividad) => {
   };
 };
 
-export const comenzarEditarActividad = (actividad, id, file) => {
+export const comenzarEditarActividad = (actividad, id) => {
   return async (dispatch) => {
     try {
-      const rutaResp = await actividadesApi.put(
-        `/subir/archivo/${actividad.id_materia}/${actividad.nombre_actividad}`,
-        file
-      );
-      const rutaImagen = rutaResp.data.ruta;
-      console.log(rutaImagen);
-      console.log({
-        ...actividad,
-        imagen_2: rutaImagen,
-      });
+      // const rutaResp = await actividadesApi.put(
+      //   `/subir/archivo/${actividad.id_materia}/${actividad.nombre_actividad}`,
+      //   file
+      // );
+      // const rutaImagen = rutaResp.data.ruta;
+      // console.log(rutaImagen);
+      // console.log({
+      //   ...actividad,
+      //   imagen_2: rutaImagen,
+      // });
       const { data } = await actividadesApi.put(`/${id}`, {
         ...actividad,
-        imagen_2: rutaImagen,
       });
 
       dispatch(editarActividad(data.actividad[1][0]));

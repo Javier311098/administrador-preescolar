@@ -4,25 +4,22 @@ import { NavLink } from "react-router-dom";
 import { Modal } from "../Modal/Modal";
 import { ModalEliminar } from "../Modal/ModalEliminar";
 import { MdVisibility, MdDelete, MdModeEdit, MdSchool } from "react-icons/md";
-import { seleccionarAlumno } from "../../store/slicers/alumnosSlice";
+import { seleccionarDocente } from "../../store/slicers/docentesSlice";
 import moment from "moment";
-import "./alumno.css";
-import { EditarAlumno } from "./EditarAlumno";
-import {
-  comenzarBajaAlumno,
-  comenzarCrearAlumno,
-} from "../../store/slicers/alumnosActions";
+import "./docente.css";
+import { EditarDocente } from "./EditarDocente";
+import { comenzarBajaDocente } from "../../store/slicers/docentesActions";
 
-export const ListaAlumnos = ({ alumnos = [] }) => {
+export const ListaDocentes = ({ docentes = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-  const { alumnoSeleccionado } = useSelector((state) => state.alumnos);
+  const { docenteSeleccionado } = useSelector((state) => state.docentes);
   const [data, setData] = useState([]);
   const [term, setTerm] = useState("");
 
   useEffect(() => {
-    setData(alumnos);
-  }, [term, alumnos]);
+    setData(docentes);
+  }, []);
 
   const dispatch = useDispatch();
   const modalOpen = () => {
@@ -30,19 +27,19 @@ export const ListaAlumnos = ({ alumnos = [] }) => {
     setModalEliminar(false);
   };
 
-  const seleccionAlumnoEliminar = (value) => {
+  const seleccionDocenteEliminar = (value) => {
     setModalEliminar(true);
-    dispatch(seleccionarAlumno(value));
-    localStorage.setItem("alumno", JSON.stringify(value));
+    dispatch(seleccionarDocente(value));
+    localStorage.setItem("docente", JSON.stringify(value));
   };
 
-  const seleccionAlumnoEditar = (value) => {
+  const seleccionDocenteEditar = (value) => {
     setModalEditar(true);
-    dispatch(seleccionarAlumno(value));
+    dispatch(seleccionarDocente(value));
   };
 
   const eliminar = () => {
-    dispatch(comenzarBajaAlumno(alumnoSeleccionado.id_usuario));
+    dispatch(comenzarBajaDocente(docenteSeleccionado.id_usuario));
     setModalEliminar(false);
   };
 
@@ -61,65 +58,65 @@ export const ListaAlumnos = ({ alumnos = [] }) => {
       <input
         className="w-50 rounded-2 ms-3 me-3 "
         type="text"
-        placeholder={`Buscar Alumno...`}
+        placeholder={`Buscar Docente...`}
         value={term}
         name="term"
         onChange={({ target }) => setTerm(target.value)}
       />
       <div className="body-container">
-        {alumnos.length > 0 ? (
-          data.filter(searchingTerm(term)).map((alumno) => (
+        {docentes.length > 0 ? (
+          data.filter(searchingTerm(term)).map((docente) => (
             <div
               className="card mt-2"
               style={{ width: "18rem" }}
-              key={alumno.id_usuario}
+              key={docente.id_usuario}
             >
               <div className="imagen-container mt-3">
-                {alumno.foto_usuario.length > 0 ? (
+                {docente.foto_usuario.length > 0 ? (
                   <img
-                    src={alumno.foto_usuario}
-                    className="alumno-imagen"
-                    alt="alumno"
+                    src={docente.foto_usuario}
+                    className="docente-imagen"
+                    alt="docente"
                   />
                 ) : (
-                  <MdSchool className="alumno-imagen" />
+                  <MdSchool className="docente-imagen" />
                 )}
               </div>
 
               <div className="card-body">
                 <h5 className="card-title">
-                  {alumno.nombre_usuario.toUpperCase()}
+                  {docente.nombre_usuario.toUpperCase()}
                 </h5>
 
                 <p className="card-text">
-                  Direccion:{alumno.direccion_residencia}
+                  Direccion:{docente.direccion_residencia}
                 </p>
-                <p className="card-text">Edad:{alumno.edad}</p>
+                <p className="card-text">Edad:{docente.edad}</p>
                 <p className="card-text">
-                  Tel.Emergencia:{alumno.telefono_emergencia_1}
+                  Tel.Emergencia:{docente.telefono_emergencia_1}
                 </p>
                 <p className="card-text">
                   Fecha de Nacimiento:
-                  {moment(alumno.fecha_nacimiento).format("D/MM/yyyy")}
+                  {moment(docente.fecha_nacimiento).format("D/MM/yyyy")}
                 </p>
-                <p className="card-text">Grado:{alumno.id_grado}</p>
+                <p className="card-text">Grado:{docente.id_grado}</p>
                 <div className="d-flex justify-content-evenly">
-                  <NavLink
-                    to="/alumnos/calificaciones"
+                  {/* <NavLink
+                    to="/docentes/calificaciones"
                     className="btn btn-primary "
                   >
                     <MdVisibility />
-                  </NavLink>
+                  </NavLink> */}
 
                   <button
                     className="btn btn-warning "
-                    onClick={() => seleccionAlumnoEditar(alumno)}
+                    onClick={() => seleccionDocenteEditar(docente)}
                   >
                     <MdModeEdit />
                   </button>
                   <button
                     className="btn btn-danger justify-content-between"
-                    onClick={() => seleccionAlumnoEliminar(alumno)}
+                    onClick={() => seleccionDocenteEliminar(docente)}
                   >
                     <MdDelete />
                   </button>
@@ -128,14 +125,14 @@ export const ListaAlumnos = ({ alumnos = [] }) => {
             </div>
           ))
         ) : (
-          <h2>no hay alumnos</h2>
+          <h2>no hay docentes</h2>
         )}
       </div>
       <Modal
         show={modalEditar}
         dismiss={modalOpen}
-        header={"Editar Alumno"}
-        body={<EditarAlumno cerrarModales={modalOpen} />}
+        header={"Editar Docente"}
+        body={<EditarDocente cerrarModales={modalOpen} />}
       />
 
       <ModalEliminar

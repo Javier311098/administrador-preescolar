@@ -3,11 +3,11 @@ import reactDom from "react-dom";
 import { IoIosCloseCircle } from "react-icons/io";
 import "./modal.css";
 
-export const Modal = ({ show, dismiss, header, body }) => {
+export const Modal = ({ show, dismiss, header, body, estiloContainer }) => {
   const modal = (
     <>
       <div className="modal-background">
-        <div className="modal-container">
+        <div className={estiloContainer ? estiloContainer : "modal-container"}>
           <div className="modal-header">
             <button className="modal-dismiss" onClick={dismiss}>
               <IoIosCloseCircle />

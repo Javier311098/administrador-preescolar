@@ -9,13 +9,21 @@ import {
   obtenerCalificaciones,
 } from "../../store/slicers/calificacionesActions";
 import { MdDelete, MdModeEdit } from "react-icons/md";
-import { GiSchoolBag } from "react-icons/gi";
 import "./calificacion.css";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 export const ListaCalificaciones = ({ calificaciones = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-  const { calificacionSeleccionado } = useSelector(
+  const { calificacionSeleccionada } = useSelector(
     (state) => state.calificaciones
   );
   const {
@@ -28,7 +36,7 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
   const alumno = JSON.parse(localStorage.getItem("alumno"));
   useEffect(() => {
     setData(calificaciones);
-  }, [term]);
+  }, [term, calificaciones]);
 
   const dispatch = useDispatch();
   const modalOpen = () => {
@@ -47,33 +55,15 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
   };
 
   const eliminar = () => {
+    console.log(calificacionSeleccionada);
     dispatch(
-      comenzarBajaCalificacion(calificacionSeleccionado.id_calificacion)
+      comenzarBajaCalificacion(calificacionSeleccionada.id_calificacion)
     );
     setModalEliminar(false);
   };
 
-  const searchingTerm = (term) => {
-    return function (x) {
-      return (
-        (x.calificacion &&
-          x.calificacion.toLowerCase().includes(term.toLowerCase())) ||
-        !term
-      );
-    };
-  };
-
   return (
     <>
-      <input
-        className="w-50 rounded-2 ms-3 me-3  "
-        type="text"
-        placeholder={`Buscar calificacion ejemplo (muy bien)...`}
-        value={term}
-        name="term"
-        onChange={({ target }) => setTerm(target.value)}
-      />
-
       <div className="d-flex mt-3 mb-3 justify-content-center ">
         {listaPeriodos.map((periodo) => (
           <button
@@ -90,58 +80,73 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
         ))}
       </div>
 
-      <div className="calificacion-container">
+      <div>
         {calificaciones.length > 0 ? (
-          data.filter(searchingTerm(term)).map((calificacion) => (
-            <div
-              className="card"
-              style={{ width: "18rem" }}
-              key={calificacion.id_calificacion}
+          <>
+            <TableContainer
+              component={Paper}
+              className="lista-container"
+              style={{ height: "460px", width: "100%" }}
             >
-              <div className="imagen-container mt-3">
-                <GiSchoolBag className="calificacion-imagen" />
-              </div>
-              <div className="card-body">
-                <h4 className="card-title">
-                  <b>Materia: </b>
-                  {listaMaterias.map((materia) => {
-                    if (calificacion.id_materia === materia.id_materia) {
-                      return materia.nombre_materia;
-                    }
-                  })}
-                </h4>
-                <h5 className="card-text">
-                  <b>Periodo: </b>
-                  {listaPeriodos.map((periodo) => {
-                    if (calificacion.id_periodo === periodo.id_periodo) {
-                      return periodo.nombre_periodo;
-                    }
-                  })}
-                </h5>
-                <h5 className="card-text">
-                  <b>Calificacion: </b>
-                  {calificacion.calificacion}
-                </h5>
-
-                <div className="d-flex justify-content-between">
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => seleccionCalificacionEditar(calificacion)}
-                  >
-                    <MdModeEdit />
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => seleccionCalificacionEliminar(calificacion)}
-                  >
-                    <MdDelete />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
+              <Table
+                sx={{ minWidth: 1150 }}
+                size="small"
+                aria-label="a dense table"
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell scope="col">Materia</TableCell>
+                    <TableCell scope="col">Calificacion</TableCell>
+                    <TableCell scope="col">Acciones</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {calificaciones.map((calificacion) => (
+                    <TableRow
+                      key={calificacion.id_materia}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell scope="col">
+                        {listaMaterias.map((materia) => {
+                          if (calificacion.id_materia === materia.id_materia) {
+                            return materia.nombre_materia;
+                          }
+                        })}
+                      </TableCell>
+                      <TableCell scope="col">
+                        {calificacion.calificacion}
+                      </TableCell>
+                      <TableCell scope="col">
+                        <button
+                          className="btn btn-warning me-2"
+                          onClick={() =>
+                            seleccionCalificacionEditar(calificacion)
+                          }
+                        >
+                          <MdModeEdit />
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() =>
+                            seleccionCalificacionEliminar(calificacion)
+                          }
+                        >
+                          <MdDelete />
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </>
         ) : (
-          <h2>no hay calificaciones</h2>
+          <div
+            className="lista-container"
+            style={{ height: "460px", width: "100%" }}
+          >
+            <h2>no hay calificaciones</h2>
+          </div>
         )}
       </div>
       <Modal

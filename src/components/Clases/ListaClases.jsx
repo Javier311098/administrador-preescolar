@@ -5,12 +5,14 @@ import { Modal } from "../Modal/Modal";
 import { ModalEliminar } from "../Modal/ModalEliminar";
 import { EditarClase } from "./EditarClase";
 import { comenzarBajaClase } from "../../store/slicers/clasesActions";
-import { MdDelete, MdModeEdit } from "react-icons/md";
+import { MdDelete, MdModeEdit, MdVisibility } from "react-icons/md";
 import claseImg from "../../imagenes/clase.jpeg";
-
+import { useNavigate } from "react-router-dom";
+import "./clases.css";
 export const ListaClases = ({ clases = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
+  const navigate = useNavigate();
   const { claseSeleccionada } = useSelector((state) => state.clases);
   const [data, setData] = useState([]);
   const [term, setTerm] = useState("");
@@ -45,6 +47,15 @@ export const ListaClases = ({ clases = [] }) => {
     setModalEliminar(false);
   };
 
+  const navegarActividad = (value) => {
+    listaActividades.map((actividad) => {
+      if (value.id_actividad === actividad.id_actividad) {
+        localStorage.setItem("actividad", JSON.stringify(actividad));
+      }
+    });
+    navigate(`/actividades/${value.id_actividad}`);
+  };
+
   //seria por fecha
   const searchingTerm = (term) => {
     return function (x) {
@@ -73,7 +84,7 @@ export const ListaClases = ({ clases = [] }) => {
         name="term"
         onChange={({ target }) => setTerm(target.value)}
       />
-      <div className="body-container ">
+      <div className="clase-container ">
         {clases.length > 0 ? (
           data.filter(searchingTerm(term)).map((clase) => (
             <div
@@ -81,7 +92,10 @@ export const ListaClases = ({ clases = [] }) => {
               style={{ width: "18rem" }}
               key={clase.id_clase}
             >
-              <img src={claseImg} className="card-img-top" alt="clase" />
+              <div className="imagen-container mt-3">
+                <img src={claseImg} className="clase-imagen" alt="clase" />
+              </div>
+
               <div className="card-body">
                 <h5 className="card-title">Clase</h5>
                 <p className="card-text">
@@ -111,6 +125,12 @@ export const ListaClases = ({ clases = [] }) => {
                 </p>
 
                 <div className="d-flex justify-content-between">
+                  <button
+                    onClick={() => navegarActividad(clase)}
+                    className="btn btn-primary "
+                  >
+                    <MdVisibility />
+                  </button>
                   <button
                     className="btn btn-warning"
                     onClick={() => seleccionClaseEditar(clase)}

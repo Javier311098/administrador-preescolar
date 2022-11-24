@@ -49,12 +49,12 @@ export const comenzarEditarCalificacion = (calificacion, id) => {
       const { data } = await calificacionesApi.put(`/${id}`, {
         ...calificacion,
       });
-
-      dispatch(editarCalificacion(data.usuario[1][0]));
+      console.log(data);
+      dispatch(editarCalificacion(data.calificacion[1][0]));
 
       Swal.fire(
         "Calificacion Editado",
-        "se edito la Calificacion correctamente",
+        "se edito la calificacion correctamente",
         "success"
       );
     } catch (error) {

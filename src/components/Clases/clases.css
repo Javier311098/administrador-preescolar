@@ -22,18 +22,18 @@
   cursor: pointer;
 }
 
-.material-img-container {
+.clase-img-container {
   display: flex;
   justify-content: center;
 }
 
 @media (max-width: 700px) {
-  .material-img-container {
+  .clase-img-container {
     flex-direction: column;
   }
 }
 
-.actividad-imagen {
+.clase-imagen {
   border: 2px solid black;
   border-radius: 50%;
   width: 85px;
@@ -41,7 +41,7 @@
   display: flex;
 }
 
-.actividad-container {
+.clase-container {
   border: 1px solid cadetblue;
   height: 60vh;
   width: 100%;
@@ -49,7 +49,7 @@
   display: grid;
   grid-gap: 10px;
   justify-items: center;
-  grid-auto-rows: 370px;
+  grid-auto-rows: 400px;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   overflow-y: scroll;
 }

@@ -8,26 +8,14 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Table,
 } from "@mui/material";
-import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table } from "react-bootstrap";
 import { comenzarCrearCalificacion } from "../../store/slicers/calificacionesActions";
 import { useForm } from "react-hook-form";
-const validaciones = {
-  periodo: [(value) => value > 0, "Se debe registrar un periodo"],
-  calificacion: [
-    (value) => value.length > 3,
-    "Se debe registrar una calificacion",
-  ],
-  materia: [(value) => value.length > 3, "Se debe registrar una materia"],
-};
 
 export const AgregarCalificacion = ({ cerrarModales }) => {
-  const [formSubmitted, setFormSubmitted] = useState(false);
-
   const {
-    alumnos: { listaAlumnos },
     periodos: { listaPeriodos },
     materias: { listaMaterias },
   } = useSelector((state) => state);
@@ -55,6 +43,7 @@ export const AgregarCalificacion = ({ cerrarModales }) => {
       };
       console.log(nuevaCalificacion);
       dispach(comenzarCrearCalificacion(nuevaCalificacion));
+      cerrarModales();
     });
   };
   return (
@@ -65,11 +54,9 @@ export const AgregarCalificacion = ({ cerrarModales }) => {
             label="Periodo"
             select
             type="text"
-            // name="periodo"
+            defaultValue=""
             fullWidth
             {...register("periodo", { required: "Debe registrar un periodo" })}
-            // value={periodo}
-            // onChange={handleLoginInputChange}
             error={errors.periodo}
             helperText={errors.periodo?.message}
           >
@@ -112,8 +99,7 @@ export const AgregarCalificacion = ({ cerrarModales }) => {
                         {...register(`${materia.id_materia}`, {
                           required: "Se debe registrar",
                         })}
-                        // value={calificacion}
-                        // onChange={handleLoginInputChange}
+                        defaultValue=""
                         error={errors[materia.id_materia]}
                         helperText={errors[materia.id_materia]?.message}
                       >

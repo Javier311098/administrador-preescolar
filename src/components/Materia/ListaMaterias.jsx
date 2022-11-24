@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
 import { comenzarBajaMateria } from "../../store/slicers/materiasActions";
 import { seleccionarMateria } from "../../store/slicers/materiasSlice";
 import { Modal } from "../Modal/Modal";
 import { ModalEliminar } from "../Modal/ModalEliminar";
 import { EditarMateria } from "./EditarMateria";
-import { MdVisibility, MdDelete, MdModeEdit } from "react-icons/md";
-import materiaImg from "../../imagenes/materias.jpeg";
+import { MdDelete, MdModeEdit } from "react-icons/md";
+import { TbMath } from "react-icons/tb";
+import "./materias.css";
 
 export const ListaMaterias = ({ materias = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
@@ -61,7 +61,7 @@ export const ListaMaterias = ({ materias = [] }) => {
         name="term"
         onChange={({ target }) => setTerm(target.value)}
       />
-      <div className="body-container">
+      <div className="materia-container">
         {materias.length > 0 ? (
           data.filter(searchingTerm(term)).map((materia) => (
             <div
@@ -69,15 +69,14 @@ export const ListaMaterias = ({ materias = [] }) => {
               style={{ width: "18rem" }}
               key={materia.id_materia}
             >
-              <img src={materiaImg} className="card-img-top " alt="materia" />
+              <div className="imagen-container mt-3">
+                <TbMath className=" materia-imagen" />
+              </div>
+
               <div className="card-body">
                 <h5 className="card-title">{materia.nombre_materia}</h5>
                 <p className="card-text">{materia.descripcion}</p>
-                <div className="d-flex flex-column">
-                  <NavLink to="/materiales/lista" className="btn btn-primary ">
-                    <MdVisibility />
-                  </NavLink>
-
+                <div className="d-flex justify-content-around">
                   <button
                     className="btn btn-warning mt-2"
                     onClick={() => seleccionMateriaEditar(materia)}

@@ -27,14 +27,14 @@ export const calificacionesSlice = createSlice({
     editarCalificacion: (state, { payload }) => {
       state.listaCalificaciones = state.listaCalificaciones.map(
         (calificacion) =>
-          calificacion.id_usuario === payload.id_calificacion
+          calificacion.id_calificacion === payload.id_calificacion
             ? payload
             : calificacion
       );
     },
     darBaja: (state, { payload }) => {
       state.listaCalificaciones = state.listaCalificaciones.filter(
-        (calificacion) => calificacion.id_usuario !== payload
+        (calificacion) => calificacion.id_calificacion !== payload
       );
 
       state.isModalOpen = false;

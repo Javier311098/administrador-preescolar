@@ -92,9 +92,15 @@ export const ListaPadres = ({ padres = [] }) => {
                   {padre.nombre_usuario.toUpperCase()}
                 </h5>
 
-                <p className="card-text">Correo:{padre.correo_electronico}</p>
-                <p className="card-text">Edad:{padre.edad}</p>
-                <p className="card-text">Telefono:{padre.telefono}</p>
+                <p className="card-text">
+                  <b>Correo:</b> {padre.correo_electronico}
+                </p>
+                <p className="card-text">
+                  <b>Edad:</b> {padre.edad}
+                </p>
+                <p className="card-text">
+                  <b>Telefono:</b> {padre.telefono}
+                </p>
 
                 <div className="d-flex justify-content-evenly">
                   <button

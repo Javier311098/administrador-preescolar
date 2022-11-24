@@ -1,25 +1,28 @@
 import { useEffect, useState } from "react";
-import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
-import { seleccionarCalificacion } from "../../store/slicers/calificacionesSlice";
+import { seleccionarClase } from "../../store/slicers/clasesSlice";
 import { Modal } from "../Modal/Modal";
 import { ModalEliminar } from "../Modal/ModalEliminar";
-import { EditarCalificacion } from "./EditarCalificacion";
-import { comenzarBajaCalificacion } from "../../store/slicers/calificacionesActions";
+import { EditarClase } from "./EditarClase";
+import { comenzarBajaClase } from "../../store/slicers/clasesActions";
 import { MdDelete, MdModeEdit } from "react-icons/md";
+import claseImg from "../../imagenes/clase.jpeg";
 
-export const ListaCalificaciones = ({ calificaciones = [] }) => {
+export const ListaClases = ({ clases = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
-  const { calificacionSeleccionado } = useSelector(
-    (state) => state.calificaciones
-  );
+  const { claseSeleccionada } = useSelector((state) => state.clases);
   const [data, setData] = useState([]);
   const [term, setTerm] = useState("");
+  const {
+    grados: { listaGrados },
+    periodos: { listaPeriodos },
+    actividades: { listaActividades },
+  } = useSelector((state) => state);
 
   useEffect(() => {
-    setData(calificaciones);
-  }, []);
+    setData(clases);
+  }, [clases]);
 
   const dispatch = useDispatch();
   const modalOpen = () => {
@@ -27,29 +30,35 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
     setModalEliminar(false);
   };
 
-  const seleccionCalificacionEliminar = (value) => {
+  const seleccionClaseEliminar = (value) => {
     setModalEliminar(true);
-    dispatch(seleccionarCalificacion(value));
+    dispatch(seleccionarClase(value));
   };
 
-  const seleccionCalificacionEditar = (value) => {
+  const seleccionClaseEditar = (value) => {
     setModalEditar(true);
-    dispatch(seleccionarCalificacion(value));
+    dispatch(seleccionarClase(value));
   };
 
   const eliminar = () => {
-    dispatch(
-      comenzarBajaCalificacion(calificacionSeleccionado.id_calificacion)
-    );
+    dispatch(comenzarBajaClase(claseSeleccionada.id_clase));
     setModalEliminar(false);
   };
 
+  //seria por fecha
   const searchingTerm = (term) => {
     return function (x) {
       return (
-        (x.nombre_calificacion &&
-          x.nombre_calificacion.toLowerCase().includes(term.toLowerCase())) ||
-        !term
+        x.id_clase &&
+        listaActividades.filter((actividad) => {
+          if (actividad.id_actividad === x.id_actividad) {
+            return (
+              actividad.nombre_actividad
+                .toLowerCase()
+                .includes(term.toLowerCase()) || !term
+            );
+          }
+        })
       );
     };
   };
@@ -59,47 +68,58 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
       <input
         className="w-50 rounded-2 ms-3 me-3  "
         type="text"
-        placeholder={`Buscar calificaciones...`}
+        placeholder={`Buscar activad de la clase...`}
         value={term}
         name="term"
         onChange={({ target }) => setTerm(target.value)}
       />
       <div className="body-container ">
-        {calificaciones.length > 0 ? (
-          data.filter(searchingTerm(term)).map((calificacion) => (
+        {clases.length > 0 ? (
+          data.filter(searchingTerm(term)).map((clase) => (
             <div
               className="card"
               style={{ width: "18rem" }}
-              key={calificacion.id_calificacion}
+              key={clase.id_clase}
             >
-              {/* <img
-                src={calificacionImg}
-                className="card-img-top"
-                alt="calificacion"
-              /> */}
+              <img src={claseImg} className="card-img-top" alt="clase" />
               <div className="card-body">
-                <h5 className="card-title">
-                  {calificacion.nombre_calificacion.toUpperCase()}
-                </h5>
+                <h5 className="card-title">Clase</h5>
                 <p className="card-text">
-                  Fecha de Inicio:
-                  {moment(calificacion.inicio_calificacion).format("D/MM/yyyy")}
+                  <b> Actividad: </b>
+                  {listaActividades.map((actividad) => {
+                    if (clase.id_actividad === actividad.id_actividad) {
+                      return actividad.nombre_actividad;
+                    }
+                  })}
                 </p>
                 <p className="card-text">
-                  Fecha de Fin:
-                  {moment(calificacion.fin_calificacion).format("D/MM/yyyy")}
+                  <b>Grado: </b>
+                  {listaGrados.map((grado) => {
+                    if (clase.id_grado === grado.id_grado) {
+                      return grado.nombre_grado;
+                    }
+                  })}
+                </p>
+
+                <p className="card-text">
+                  <b> Periodo: </b>
+                  {listaPeriodos.map((periodo) => {
+                    if (clase.id_periodo === periodo.id_periodo) {
+                      return periodo.nombre_periodo;
+                    }
+                  })}
                 </p>
 
                 <div className="d-flex justify-content-between">
                   <button
                     className="btn btn-warning"
-                    onClick={() => seleccionCalificacionEditar(calificacion)}
+                    onClick={() => seleccionClaseEditar(clase)}
                   >
                     <MdModeEdit />
                   </button>
                   <button
                     className="btn btn-danger"
-                    onClick={() => seleccionCalificacionEliminar(calificacion)}
+                    onClick={() => seleccionClaseEliminar(clase)}
                   >
                     <MdDelete />
                   </button>
@@ -108,14 +128,14 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
             </div>
           ))
         ) : (
-          <h2>no hay calificaciones</h2>
+          <h2>no hay clases</h2>
         )}
       </div>
       <Modal
         show={modalEditar}
         dismiss={modalOpen}
-        header={"Editar calificacion"}
-        body={<EditarCalificacion cerrarModales={modalOpen} />}
+        header={"Editar Clase"}
+        body={<EditarClase cerrarModales={modalOpen} />}
       />
 
       <ModalEliminar

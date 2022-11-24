@@ -65,7 +65,7 @@ export const Tabla = ({
       <input
         className="w-50 rounded-2 ms-3 me-3 "
         type="text"
-        placeholder={`Buscar ...`}
+        placeholder={`Buscar actividades...`}
         value={term}
         name="term"
         onChange={({ target }) => setTerm(target.value)}

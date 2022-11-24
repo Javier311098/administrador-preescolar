@@ -21,15 +21,11 @@ export const obtenerDocentes = () => {
   };
 };
 
-export const comenzarCrearDocente = (docente, idAlumno) => {
+export const comenzarCrearDocente = (docente) => {
   return async (dispatch) => {
     try {
       const { data } = await usuarioApi.post("/", {
         ...docente,
-      });
-      await usuarioApi.post("/relacion/tutor/", {
-        id_usuario_estudiante: idAlumno,
-        id_usuario_tutor: data.usuario.id_usuario,
       });
 
       dispatch(crearDocente(data.usuario));

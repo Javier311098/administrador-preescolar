@@ -10,6 +10,7 @@ import { AlumnosScreen } from "../components/Alumnos/AlumnosScreen";
 import { PadresScreen } from "../components/Padres/PadresScreen";
 import { DocentesScreen } from "../components/Docentes/DocentesScreen";
 import { CalificacionesScreen } from "../components/Calificaciones/CalificacionesScreen";
+import { ClasesScreen } from "../components/Clases/ClasesScreen";
 
 export const DashboardRoutes = () => {
   return (
@@ -24,7 +25,11 @@ export const DashboardRoutes = () => {
           <Route path="padres" element={<PadresScreen />} />
           <Route path="actividades" element={<MaterialDidacticoLista />} />
           <Route path="grados" element={<GradosScreen />} />
-          <Route path="calificaciones" element={<CalificacionesScreen />} />
+          <Route
+            path="alumnos/calificaciones"
+            element={<CalificacionesScreen />}
+          />
+          <Route path="clases" element={<ClasesScreen />} />
           <Route path="periodos" element={<PeriodosScreen />} />
           <Route
             path="/actividades/:idActividad"

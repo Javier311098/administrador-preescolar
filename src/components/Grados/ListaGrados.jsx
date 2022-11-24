@@ -4,6 +4,7 @@ import { seleccionarGrado } from "../../store/slicers/gradosSlice";
 import { Modal } from "../Modal/Modal";
 import { ModalEliminar } from "../Modal/ModalEliminar";
 import { EditarGrado } from "./EditarGrado";
+import { MdDelete, MdModeEdit } from "react-icons/md";
 import gradoImg from "../../imagenes/grado.jpeg";
 import { comenzarBajaGrado } from "../../store/slicers/gradosActions";
 export const ListaGrados = ({ grados = [] }) => {
@@ -77,13 +78,13 @@ export const ListaGrados = ({ grados = [] }) => {
                     className="btn btn-warning"
                     onClick={() => seleccionGradoEditar(grado)}
                   >
-                    Editar
+                    <MdModeEdit />
                   </button>
                   <button
                     className="btn btn-danger"
                     onClick={() => seleccionGradoEliminar(grado)}
                   >
-                    Eliminar
+                    <MdDelete />
                   </button>
                 </div>
               </div>

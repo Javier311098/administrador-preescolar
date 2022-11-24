@@ -2,7 +2,8 @@ import { Grid, MenuItem, TextField } from "@mui/material";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
-import { comenzarCrearPadre } from "../../store/slicers/padreActions";
+import { comenzarCrearDocente } from "../../store/slicers/docentesActions";
+
 const validaciones = {
   nombre: [
     (value) => value.length > 3,
@@ -56,7 +57,7 @@ export const AgregarDocente = ({ cerrarModales }) => {
     e.preventDefault();
     setFormSubmitted(true);
     if (isValid) {
-      const padre = {
+      const docente = {
         nombre_usuario: nombre,
         telefono: telefono,
         correo_electronico: correoElectronico,
@@ -64,9 +65,10 @@ export const AgregarDocente = ({ cerrarModales }) => {
         id_rol: 2,
         edad: edad,
         foto_usuario: img1,
+        id_grado: grado,
       };
-      const idGrado = grado;
-      dispach(comenzarCrearPadre(padre, idGrado));
+
+      dispach(comenzarCrearDocente(docente));
       cerrarModales();
     }
   };
@@ -82,9 +84,9 @@ export const AgregarDocente = ({ cerrarModales }) => {
 
   return (
     <>
-      <form onSubmit={submit} className="form-padre ">
-        <div className="form-padre ">
-          <div className="padre-form-derecho">
+      <form onSubmit={submit} className="form-docente ">
+        <div className="form-docente ">
+          <div className="docente-form-derecho">
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
                 label="Nombre del Docente"
@@ -152,7 +154,7 @@ export const AgregarDocente = ({ cerrarModales }) => {
               />
             </Grid>
           </div>
-          <div className="padre-form-izquierdo">
+          <div className="docente-form-izquierdo">
             <Grid container item xs={12} sx={{ mt: 2 }}>
               <TextField
                 label="Grado"
@@ -166,7 +168,7 @@ export const AgregarDocente = ({ cerrarModales }) => {
                 helperText={formSubmitted && gradoValid}
               >
                 {listaGrados.map((grado) => (
-                  <MenuItem key={grado.id_usuario} value={grado.id_grado}>
+                  <MenuItem key={grado.id_grado} value={grado.id_grado}>
                     {grado.nombre_grado}
                   </MenuItem>
                 ))}
@@ -174,7 +176,7 @@ export const AgregarDocente = ({ cerrarModales }) => {
             </Grid>
 
             <div
-              className="imagen-padre text-center"
+              className="imagen-docente text-center"
               onClick={() => fileInputRef1.current.click()}
             >
               {img1.length > 0 ? (

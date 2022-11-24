@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "../../hooks/useForm";
 import { checarAutentificacion } from "../../store/auth/thunks";
 import "./login.css";
-import "react-chatbot-kit/build/main.css";
+
 import { Grid, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAuthStore } from "../../hooks/useAuthStore";
@@ -15,9 +15,7 @@ const validaciones = {
 };
 
 export const LoginScreen = () => {
-  let navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { startLogin, errorMessage } = useAuthStore();
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formLoginValues, handleLoginInputChange, validacion, isValid] =

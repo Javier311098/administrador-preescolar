@@ -1,61 +1,204 @@
-import React from "react";
+import { Grid, MenuItem, TextField } from "@mui/material";
+import { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
+import { comenzarEditarDocente } from "../../store/slicers/docentesActions";
+const validaciones = {
+  nombre: [
+    (value) => value.length > 3,
+    "El nombre debe tener al menos 4 caracteres",
+  ],
+  telefono: [(value) => value.length > 8, "Debe ingresar un telefono"],
 
-export const EditarDocente = () => {
-  const [formLoginValues, handleLoginInputChange] = useForm({
-    nombre: "",
-    email: "",
-    celular: "",
-  });
+  correoElectronico: [
+    (value) => value.length > 6,
+    "Debe ingresar un correo valido",
+  ],
+  passwordUsuario: [
+    (value) => value.length > 0,
+    "Debe ingresar una contraseña",
+  ],
+  edad: [(value) => value > 0, "Debe ingresar la edad"],
+  grado: [(value) => value > 0, "Debe elegir un grado"],
+};
 
-  const { nombre, email, celular } = formLoginValues;
+export const EditarDocente = ({ cerrarModales }) => {
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const { listaGrados } = useSelector((state) => state.grados);
+  const { docenteSeleccionado } = useSelector((state) => state.docentes);
+  const fileInputRef1 = useRef();
+  const [img1, setImg1] = useState("");
+  const [formLoginValues, handleLoginInputChange, validacion, isValid] =
+    useForm(
+      {
+        nombre: docenteSeleccionado.nombre_usuario,
+        telefono: docenteSeleccionado.telefono,
+        correoElectronico: docenteSeleccionado.correo_electronico,
+        passwordUsuario: "",
+        grado: docenteSeleccionado.id_grado,
+        edad: docenteSeleccionado.edad,
+      },
+      validaciones
+    );
 
+  const { nombre, telefono, correoElectronico, passwordUsuario, grado, edad } =
+    formLoginValues;
+
+  const {
+    nombreValid,
+    telefonoValid,
+    correoElectronicoValid,
+    passwordUsuarioValid,
+    gradoValid,
+    edadValid,
+  } = validacion;
+  const dispach = useDispatch();
   const submit = (e) => {
     e.preventDefault();
+    setFormSubmitted(true);
+    if (isValid) {
+      const docente = {
+        nombre_usuario: nombre,
+        telefono: telefono,
+        correo_electronico: correoElectronico,
+        password_usuario: passwordUsuario,
+        id_rol: 2,
+        edad: edad,
+        foto_usuario: img1,
+        id_grado: grado,
+      };
+
+      dispach(comenzarEditarDocente(docente, docenteSeleccionado.id_usuario));
+      cerrarModales();
+    }
+  };
+
+  const cargarImagen = (e) => {
+    if (e.target.files === 0) return;
+    const file = new FileReader();
+    file.readAsDataURL(e.target.files[0]);
+    file.onload = function () {
+      setImg1(file.result);
+    };
   };
 
   return (
-    <form onSubmit={submit} className="form-container">
-      <label className="form-label fs-6 ">Nombre</label>
-      <input
-        title="Tooltip on right"
-        type="email"
-        className="form-control"
-        name="nombre"
-        value={nombre}
-        onChange={handleLoginInputChange}
-      />
+    <>
+      <form onSubmit={submit} className="form-docente ">
+        <div className="form-docente ">
+          <div className="docente-form-derecho">
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <TextField
+                label="Nombre del Docente"
+                type="text"
+                placeholder="juan perez perez"
+                name="nombre"
+                value={nombre}
+                fullWidth
+                onChange={handleLoginInputChange}
+                error={!!nombreValid && formSubmitted}
+                helperText={formSubmitted && nombreValid}
+              />
+            </Grid>
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <TextField
+                label="Telefono"
+                type="text"
+                placeholder="33-33-33-33-33"
+                name="telefono"
+                value={telefono}
+                fullWidth
+                onChange={handleLoginInputChange}
+                error={!!telefonoValid && formSubmitted}
+                helperText={formSubmitted && telefonoValid}
+              />
+            </Grid>
 
-      <label className="form-label fs-6">Correo Electronico</label>
-      <input
-        title="Tooltip on right"
-        type="email"
-        className="form-control"
-        placeholder="name@example.com"
-        name="email"
-        value={email}
-        onChange={handleLoginInputChange}
-      />
-      <label className="form-label fs-6">Celular</label>
-      <input
-        title="Tooltip on right"
-        type="text"
-        className="form-control"
-        name="celular"
-        value={celular}
-        onChange={handleLoginInputChange}
-      />
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <TextField
+                label="Correo Electronico"
+                type="email"
+                placeholder="juan@example.com"
+                name="correoElectronico"
+                value={correoElectronico}
+                fullWidth
+                onChange={handleLoginInputChange}
+                error={!!correoElectronicoValid && formSubmitted}
+                helperText={formSubmitted && correoElectronicoValid}
+              />
+            </Grid>
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <TextField
+                label="Contraseña"
+                type="password"
+                placeholder="*********"
+                name="passwordUsuario"
+                value={passwordUsuario}
+                fullWidth
+                onChange={handleLoginInputChange}
+                error={!!passwordUsuarioValid && formSubmitted}
+                helperText={formSubmitted && passwordUsuarioValid}
+              />
+            </Grid>
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <TextField
+                label="Edad"
+                type="number"
+                placeholder="5"
+                name="edad"
+                value={edad}
+                fullWidth
+                onChange={handleLoginInputChange}
+                error={!!edadValid && formSubmitted}
+                helperText={formSubmitted && edadValid}
+              />
+            </Grid>
+          </div>
+          <div className="docente-form-izquierdo">
+            <Grid container item xs={12} sx={{ mt: 2 }}>
+              <TextField
+                label="Grado"
+                select
+                type="text"
+                name="grado"
+                value={grado}
+                fullWidth
+                onChange={handleLoginInputChange}
+                error={!!gradoValid && formSubmitted}
+                helperText={formSubmitted && gradoValid}
+              >
+                {listaGrados.map((grado) => (
+                  <MenuItem key={grado.id_grado} value={grado.id_grado}>
+                    {grado.nombre_grado}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
 
-      <select className="form-select mt-3" aria-label="Default select example">
-        <option selected>Grupo</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
-
-      <button className="btn btn-primary mt-3" type="submit">
-        Actualizar
-      </button>
-    </form>
+            <div
+              className="imagen-docente text-center"
+              onClick={() => fileInputRef1.current.click()}
+            >
+              {img1.length > 0 ? (
+                <img src={img1} alt="img" className="imagen-preview" />
+              ) : (
+                " Agregar imagen"
+              )}
+            </div>
+            <input
+              className="mt-2 "
+              type="file"
+              accept="image/*"
+              ref={fileInputRef1}
+              onChange={cargarImagen}
+              style={{ display: "none" }}
+            />
+            <button className="btn btn-primary mt-5" type="submit">
+              Editar
+            </button>
+          </div>
+        </div>
+      </form>
+    </>
   );
 };

@@ -3,9 +3,11 @@ import { authSlice } from "./auth/authSlice";
 import { actividadesSlice } from "./slicers/actividadesSlice";
 import { alumnosSlice } from "./slicers/alumnosSlice";
 import { calificacionesSlice } from "./slicers/calificacionesSlice";
+import { clasesSlice } from "./slicers/clasesSlice";
 import { docentesSlice } from "./slicers/docentesSlice";
 import { gradosSlice } from "./slicers/gradosSlice";
 import { materiasSlice } from "./slicers/materiasSlice";
+import { navSlice } from "./slicers/navSlice";
 import { padresSlice } from "./slicers/padresSlice";
 import { periodosSlice } from "./slicers/periodosSlice";
 
@@ -20,5 +22,7 @@ export const store = configureStore({
     periodos: periodosSlice.reducer,
     grados: gradosSlice.reducer,
     calificaciones: calificacionesSlice.reducer,
+    clases: clasesSlice.reducer,
+    navbar: navSlice.reducer,
   },
 });

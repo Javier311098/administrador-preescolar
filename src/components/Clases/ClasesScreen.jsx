@@ -4,23 +4,27 @@ import { Modal } from "../Modal/Modal";
 import { BotonesArriba } from "../Botones/BotonesArriba";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../Spinner/Spinner";
-import { AgregarCalificacion } from "./AgregarCalificacion";
-import { obtenerCalificaciones } from "../../store/slicers/calificacionesActions";
-import { ListaCalificaciones } from "./ListaCalificaciones";
+import { AgregarClase } from "./AgregarClase";
+import { obtenerClases } from "../../store/slicers/clasesActions";
+import { ListaClases } from "./ListaClases";
+import { obtenerPeriodos } from "../../store/slicers/periodosActions";
+import { obtenerActividades } from "../../store/slicers/actividadesActions";
+import { obtenerGrados } from "../../store/slicers/gradosActions";
 
-export const CalificacionesScreen = () => {
+export const ClasesScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
 
   const modalOpen = () => {
     setModalAgregar(false);
   };
-  const { isLoading, listaCalificaciones } = useSelector(
-    (state) => state.calificaciones
-  );
+  const { isLoading, listaClases } = useSelector((state) => state.clases);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(obtenerCalificaciones());
+    dispatch(obtenerClases());
+    dispatch(obtenerGrados());
+    dispatch(obtenerPeriodos());
+    dispatch(obtenerActividades());
   }, []);
 
   return (
@@ -29,16 +33,16 @@ export const CalificacionesScreen = () => {
         <Spinner />
       ) : (
         <>
-          <h2 className="text-center">Calificaciones</h2>
+          <h2 className="text-center">Clases</h2>
           <BotonesArriba accion={() => setModalAgregar(true)} />
 
-          <ListaCalificaciones calificaciones={listaCalificaciones} />
+          <ListaClases clases={listaClases} />
 
           <Modal
             show={modalAgregar}
             dismiss={modalOpen}
-            header={"Agregar Calificacion"}
-            body={<AgregarCalificacion cerrarModales={modalOpen} />}
+            header={"Agregar Clase"}
+            body={<AgregarClase cerrarModales={modalOpen} />}
           />
         </>
       )}

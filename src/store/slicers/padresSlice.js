@@ -8,12 +8,16 @@ export const padresSlice = createSlice({
     padreSeleccionado: {},
     alumnoSeleccionado: {},
     isLoading: false,
+    isLoadingData: false,
     isModalOpen: false,
   },
 
   reducers: {
     cargando: (state) => {
       state.isLoading = true;
+    },
+    cargandoData: (state) => {
+      state.isLoadingData = true;
     },
     abrirModal: (state) => {
       state.isModalOpen = true;
@@ -34,10 +38,10 @@ export const padresSlice = createSlice({
     },
     seleccionarPadre: (state, { payload }) => {
       state.padreSeleccionado = payload;
-      state.isLoading = false;
+      state.isLoadingData = false;
     },
     seleccionarAlumno: (state, { payload }) => {
-      state.isLoadingList = false;
+      state.isLoadingData = false;
       state.alumnoSeleccionado = payload;
     },
     editarPadre: (state, { payload }) => {
@@ -57,6 +61,7 @@ export const padresSlice = createSlice({
 
 export const {
   cargando,
+  cargandoData,
   abrirModal,
   cerrarModal,
   setPadres,

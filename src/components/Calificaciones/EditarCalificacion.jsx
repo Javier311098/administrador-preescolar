@@ -1,54 +1,69 @@
-import { Grid, TextField } from "@mui/material";
+import {
+  Grid,
+  MenuItem,
+  Paper,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+} from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
-import { comenzarEditarPeriodo } from "../../store/slicers/periodosActions";
-import DatePicker from "react-datepicker";
-import { registerLocale, setDefaultLocale } from "react-datepicker";
-import es from "date-fns/locale/es";
-
-import "react-datepicker/dist/react-datepicker.css";
-import { FormLabel } from "react-bootstrap";
+import { FormLabel, Table } from "react-bootstrap";
+import { comenzarCrearCalificacion } from "../../store/slicers/calificacionesActions";
 const validaciones = {
-  nombre: [
+  periodo: [(value) => value > 0, "Se debe registrar un periodo"],
+  alumno: [(value) => value > 0, "Se debe registrar un alumno"],
+  calificacion: [
     (value) => value.length > 3,
-    "El nombre debe tener al menos 4 caracteres",
+    "Se debe registrar una calificacion",
   ],
+  materia: [(value) => value.length > 3, "Se debe registrar una materia"],
 };
 
 export const EditarCalificacion = ({ cerrarModales }) => {
-  registerLocale("es", es);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const { periodoSeleccionado } = useSelector((state) => state.periodos);
-  const { id_periodo, nombre_periodo, inicio_periodo, fin_periodo } =
-    periodoSeleccionado;
-  const [fechaInicio, setFechaInicio] = useState(new Date(inicio_periodo));
-  const [fechaFin, setFechaFin] = useState(new Date(fin_periodo));
+
+  const {
+    alumnos: { listaAlumnos },
+    periodos: { listaPeriodos },
+    materias: { listaMaterias },
+  } = useSelector((state) => state);
+
+  const listaCalificaciones = ["EXCELENTE", "MUY BIEN", "BIEN", "REGULAR"];
+
   const [formLoginValues, handleLoginInputChange, validacion, isValid] =
     useForm(
       {
-        nombre: nombre_periodo,
+        periodo: "",
+        alumno: "",
+        calificacion: "",
+        materia: "",
       },
       validaciones
     );
 
-  const { nombre, inicio, fin } = formLoginValues;
-  const { nombreValid } = validacion;
+  const { periodo, alumno, calificacion, materia } = formLoginValues;
+  const { periodoValid, alumnoValid, calificacionValid, materiaValid } =
+    validacion;
   const dispach = useDispatch();
   const submit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
+
     if (isValid) {
-      dispach(comenzarEditarPeriodo(nombre, fechaInicio, fechaFin, id_periodo));
+      const nuevaCalificacion = {
+        id_periodo: periodo,
+        id_usuario: alumno,
+        calificacion: calificacion,
+        id_materia: materia,
+      };
+      dispach(comenzarCrearCalificacion(nuevaCalificacion));
       cerrarModales();
     }
-  };
-
-  const handleFechaInicio = (date) => {
-    setFechaInicio(date);
-  };
-  const handleFechaFin = (date) => {
-    setFechaFin(date);
   };
 
   return (
@@ -56,35 +71,154 @@ export const EditarCalificacion = ({ cerrarModales }) => {
       <form onSubmit={submit} className="form-container ">
         <Grid container item xs={12} sx={{ mt: 2 }}>
           <TextField
-            label="Nombre del Periodo"
+            label="Periodo"
+            select
             type="text"
-            placeholder="bloque 1"
-            name="nombre"
-            value={nombre}
+            name="periodo"
+            value={periodo}
             fullWidth
             onChange={handleLoginInputChange}
-            error={!!nombreValid && formSubmitted}
-            helperText={formSubmitted && nombreValid}
-          />
+            error={!!periodoValid && formSubmitted}
+            helperText={formSubmitted && periodoValid}
+          >
+            {listaPeriodos.map((periodo) => (
+              <MenuItem key={periodo.id_periodo} value={periodo.id_periodo}>
+                {periodo.nombre_periodo}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+        <TableContainer component={Paper} className="lista-container">
+          <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell scope="col">Materia</TableCell>
+                <TableCell scope="col">Calificacion</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {listaMaterias.map((materia, index) => (
+                <TableRow
+                  key={index}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell key={index} scope="col">
+                    {materia.nombre_materia}
+                  </TableCell>
+                  <TableCell key={index} scope="col">
+                    <Grid container item xs={12} sx={{ mt: 2 }}>
+                      <TextField
+                        label="Calificacion"
+                        select
+                        type="text"
+                        name="calificacion"
+                        value={calificacion}
+                        fullWidth
+                        onChange={handleLoginInputChange}
+                        error={!!calificacionValid && formSubmitted}
+                        helperText={formSubmitted && calificacionValid}
+                      >
+                        {listaCalificaciones.map((calificacion) => (
+                          <MenuItem key={calificacion} value={calificacion}>
+                            {calificacion}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        {
+          /* <Grid container item xs={12} sx={{ mt: 2 }}>
+          <TextField
+            label="Periodo"
+            select
+            type="text"
+            name="periodo"
+            value={periodo}
+            fullWidth
+            onChange={handleLoginInputChange}
+            error={!!periodoValid && formSubmitted}
+            helperText={formSubmitted && periodoValid}
+          >
+            {listaPeriodos.map((periodo) => (
+              <MenuItem key={periodo.id_periodo} value={periodo.id_periodo}>
+                {periodo.nombre_periodo}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
 
-        <FormLabel>Fecha de Inicio:</FormLabel>
-        <DatePicker
-          selected={fechaInicio}
-          onChange={handleFechaInicio}
-          locale="es"
-          dateFormat="dd//MM/yyyy"
-        />
-        <FormLabel>Fecha de Fin:</FormLabel>
-        <DatePicker
-          selected={fechaFin}
-          onChange={handleFechaFin}
-          locale="es"
-          dateFormat="dd//MM/yyyy"
-        />
-        <button className="btn btn-primary mt-3" type="submit">
-          Editar
-        </button>
+        <Grid container item xs={12} sx={{ mt: 2 }}>
+          <TextField
+            label="Alumno"
+            select
+            type="alumno"
+            name="alumno"
+            value={alumno}
+            fullWidth
+            onChange={handleLoginInputChange}
+            error={!!alumnoValid && formSubmitted}
+            helperText={formSubmitted && alumnoValid}
+          >
+            {listaAlumnos.map((alumno) => (
+              <MenuItem key={alumno.id_alumno} value={alumno.id_alumno}>
+                {alumno.nombre_usuario}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+
+        <Grid container item xs={12} sx={{ mt: 2 }}>
+          <TextField
+            label="Calificacion"
+            select
+            type="text"
+            name="calificacion"
+            value={calificacion}
+            fullWidth
+            onChange={handleLoginInputChange}
+            error={!!calificacionValid && formSubmitted}
+            helperText={formSubmitted && calificacionValid}
+          >
+            {listaCalificaciones.map((calificacion) => (
+              <MenuItem key={calificacion} value={calificacion}>
+                {calificacion}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+
+        <Grid container item xs={12} sx={{ mt: 2 }}>
+          <TextField
+            label="Materia"
+            select
+            type="materia"
+            name="materia"
+            value={materia}
+            fullWidth
+            onChange={handleLoginInputChange}
+            error={!!materiaValid && formSubmitted}
+            helperText={formSubmitted && materiaValid}
+          >
+            {listaMaterias.map((materia) => (
+              <MenuItem key={materia.id_materia} value={materia.id_materia}>
+                {materia.nombre_materia}
+              </MenuItem>
+            ))}
+          </TextField>
+        </Grid>
+
+     
+        */
+          <button className="btn btn-primary mt-3" type="submit">
+            Editar
+          </button>
+        }
       </form>
     </>
   );

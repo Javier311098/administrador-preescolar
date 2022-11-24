@@ -8,6 +8,7 @@ import {
   obtenerRelacionPadre,
 } from "../../store/slicers/padreActions";
 import { Spinner } from "../Spinner/Spinner";
+
 const validaciones = {
   nombre: [
     (value) => value.length > 3,
@@ -30,7 +31,7 @@ const validaciones = {
 export const EditarPadre = ({ cerrarModales }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { listaAlumnos } = useSelector((state) => state.alumnos);
-  const { padreSeleccionado, alumnoSeleccionado } = useSelector(
+  const { padreSeleccionado, alumnoSeleccionado, isLoadingData } = useSelector(
     (state) => state.padres
   );
   const fileInputRef1 = useRef();
@@ -101,122 +102,126 @@ export const EditarPadre = ({ cerrarModales }) => {
 
   return (
     <>
-      <form onSubmit={submit} className="form-padre ">
-        <div className="form-padre ">
-          <div className="padre-form-derecho">
-            <Grid container item xs={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Nombre del Padre o tutor"
-                type="text"
-                placeholder="juan perez perez"
-                name="nombre"
-                value={nombre}
-                fullWidth
-                onChange={handleLoginInputChange}
-                error={!!nombreValid && formSubmitted}
-                helperText={formSubmitted && nombreValid}
-              />
-            </Grid>
-            <Grid container item xs={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Telefono"
-                type="text"
-                placeholder="33-33-33-33-33"
-                name="telefono"
-                value={telefono}
-                fullWidth
-                onChange={handleLoginInputChange}
-                error={!!telefonoValid && formSubmitted}
-                helperText={formSubmitted && telefonoValid}
-              />
-            </Grid>
+      {isLoadingData ? (
+        <Spinner />
+      ) : (
+        <form onSubmit={submit} className="form-padre ">
+          <div className="form-padre ">
+            <div className="padre-form-derecho">
+              <Grid container item xs={12} sx={{ mt: 2 }}>
+                <TextField
+                  label="Nombre del Padre o tutor"
+                  type="text"
+                  placeholder="juan perez perez"
+                  name="nombre"
+                  value={nombre}
+                  fullWidth
+                  onChange={handleLoginInputChange}
+                  error={!!nombreValid && formSubmitted}
+                  helperText={formSubmitted && nombreValid}
+                />
+              </Grid>
+              <Grid container item xs={12} sx={{ mt: 2 }}>
+                <TextField
+                  label="Telefono"
+                  type="text"
+                  placeholder="33-33-33-33-33"
+                  name="telefono"
+                  value={telefono}
+                  fullWidth
+                  onChange={handleLoginInputChange}
+                  error={!!telefonoValid && formSubmitted}
+                  helperText={formSubmitted && telefonoValid}
+                />
+              </Grid>
 
-            <Grid container item xs={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Correo Electronico"
-                type="email"
-                placeholder="juan@example.com"
-                name="correoElectronico"
-                value={correoElectronico}
-                fullWidth
-                onChange={handleLoginInputChange}
-                error={!!correoElectronicoValid && formSubmitted}
-                helperText={formSubmitted && correoElectronicoValid}
-              />
-            </Grid>
-            <Grid container item xs={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Contraseña"
-                type="password"
-                placeholder="*********"
-                name="passwordUsuario"
-                value={passwordUsuario}
-                fullWidth
-                onChange={handleLoginInputChange}
-                error={!!passwordUsuarioValid && formSubmitted}
-                helperText={formSubmitted && passwordUsuarioValid}
-              />
-            </Grid>
-            <Grid container item xs={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Edad"
-                type="number"
-                placeholder="5"
-                name="edad"
-                value={edad}
-                fullWidth
-                onChange={handleLoginInputChange}
-                error={!!edadValid && formSubmitted}
-                helperText={formSubmitted && edadValid}
-              />
-            </Grid>
-          </div>
-          <div className="padre-form-izquierdo">
-            <Grid container item xs={12} sx={{ mt: 2 }}>
-              <TextField
-                label="Alumno"
-                select
-                type="text"
-                name="alumno"
-                value={alumno}
-                fullWidth
-                onChange={handleLoginInputChange}
-                error={!!alumnoValid && formSubmitted}
-                helperText={formSubmitted && alumnoValid}
-              >
-                {listaAlumnos.map((alumno) => (
-                  <MenuItem key={alumno.id_usuario} value={alumno.id_usuario}>
-                    {alumno.nombre_usuario}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-
-            <div
-              className="imagen-padre text-center"
-              onClick={() => fileInputRef1.current.click()}
-            >
-              {img1.length > 0 ? (
-                <img src={img1} alt="img" className="imagen-preview" />
-              ) : (
-                " Agregar imagen"
-              )}
+              <Grid container item xs={12} sx={{ mt: 2 }}>
+                <TextField
+                  label="Correo Electronico"
+                  type="email"
+                  placeholder="juan@example.com"
+                  name="correoElectronico"
+                  value={correoElectronico}
+                  fullWidth
+                  onChange={handleLoginInputChange}
+                  error={!!correoElectronicoValid && formSubmitted}
+                  helperText={formSubmitted && correoElectronicoValid}
+                />
+              </Grid>
+              <Grid container item xs={12} sx={{ mt: 2 }}>
+                <TextField
+                  label="Contraseña"
+                  type="password"
+                  placeholder="*********"
+                  name="passwordUsuario"
+                  value={passwordUsuario}
+                  fullWidth
+                  onChange={handleLoginInputChange}
+                  error={!!passwordUsuarioValid && formSubmitted}
+                  helperText={formSubmitted && passwordUsuarioValid}
+                />
+              </Grid>
+              <Grid container item xs={12} sx={{ mt: 2 }}>
+                <TextField
+                  label="Edad"
+                  type="number"
+                  placeholder="5"
+                  name="edad"
+                  value={edad}
+                  fullWidth
+                  onChange={handleLoginInputChange}
+                  error={!!edadValid && formSubmitted}
+                  helperText={formSubmitted && edadValid}
+                />
+              </Grid>
             </div>
-            <input
-              className="mt-2 "
-              type="file"
-              accept="image/*"
-              ref={fileInputRef1}
-              onChange={cargarImagen}
-              style={{ display: "none" }}
-            />
+            <div className="padre-form-izquierdo">
+              <Grid container item xs={12} sx={{ mt: 2 }}>
+                <TextField
+                  label="Alumno"
+                  select
+                  type="text"
+                  name="alumno"
+                  value={alumno}
+                  fullWidth
+                  onChange={handleLoginInputChange}
+                  error={!!alumnoValid && formSubmitted}
+                  helperText={formSubmitted && alumnoValid}
+                >
+                  {listaAlumnos.map((alumno) => (
+                    <MenuItem key={alumno.id_usuario} value={alumno.id_usuario}>
+                      {alumno.nombre_usuario}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
 
-            <button className="btn btn-primary mt-5" type="submit">
-              Editar
-            </button>
+              <div
+                className="imagen-padre text-center"
+                onClick={() => fileInputRef1.current.click()}
+              >
+                {img1.length > 0 ? (
+                  <img src={img1} alt="img" className="imagen-preview" />
+                ) : (
+                  " Agregar imagen"
+                )}
+              </div>
+              <input
+                className="mt-2 "
+                type="file"
+                accept="image/*"
+                ref={fileInputRef1}
+                onChange={cargarImagen}
+                style={{ display: "none" }}
+              />
+
+              <button className="btn btn-primary mt-5" type="submit">
+                Editar
+              </button>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      )}
     </>
   );
 };

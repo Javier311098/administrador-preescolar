@@ -35,7 +35,9 @@ export const EditarAlumno = ({ cerrarModales }) => {
       ? alumnoSeleccionado.foto_usuario
       : ""
   );
-  const [fechaNacimiento, setFechaNacimiento] = useState(new Date());
+  const [fechaNacimiento, setFechaNacimiento] = useState(
+    new Date(alumnoSeleccionado.fecha_nacimiento)
+  );
   const [formLoginValues, handleLoginInputChange, validacion, isValid] =
     useForm(
       {

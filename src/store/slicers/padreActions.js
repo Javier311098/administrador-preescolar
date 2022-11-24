@@ -2,6 +2,7 @@ import Swal from "sweetalert2";
 import usuarioApi from "../../api/usuarioApi";
 import {
   cargando,
+  cargandoData,
   crearPadre,
   darBaja,
   editarPadre,
@@ -60,9 +61,9 @@ export const obtenerAlumnosSinRelacion = () => {
 
 export const obtenerRelacionPadre = (id) => {
   return async (dispatch) => {
+    dispatch(cargandoData());
     try {
       const { data } = await usuarioApi.get(`/relacion/padre/${id}`);
-
       dispatch(seleccionarAlumno(data.alumnoSeleccionado));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
@@ -76,12 +77,14 @@ export const comenzarCrearPadre = (padre, idAlumno) => {
       const { data } = await usuarioApi.post("/", {
         ...padre,
       });
-      await usuarioApi.post("/relacion/tutor/", {
+      console.log(data);
+      const resp = await usuarioApi.post("/relacion/tutor/", {
         id_usuario_estudiante: idAlumno,
-        id_usuario_tutor: data.usuario.id_usuario,
+        id_usuario_tutor: data.id_usuario,
       });
 
       dispatch(crearPadre(data.usuario));
+
       Swal.fire("Padre Creado", "se creo el Padre correctamente", "success");
     } catch (error) {
       Swal.fire("Error en la carga", error.response.data.msg, "error");
@@ -96,10 +99,11 @@ export const comenzarEditarPadre = (padre, id, idAlumno) => {
       const { data } = await usuarioApi.put(`/${id}`, {
         ...padre,
       });
-      await usuarioApi.post("/relacion/tutor/", {
+      await usuarioApi.put(`/relacion/tutor/${id}`, {
         id_usuario_estudiante: idAlumno,
         id_usuario_tutor: id,
       });
+
       dispatch(editarPadre(data.usuario[1][0]));
 
       Swal.fire("Padre Editado", "se edito el Padre correctamente", "success");
@@ -114,6 +118,7 @@ export const comenzarBajaPadre = (id) => {
   return async (dispatch) => {
     try {
       await usuarioApi.put(`/baja/${id}`);
+      await usuarioApi.put(`/baja/relacion/tutor/${id}`);
       dispatch(darBaja(id));
       Swal.fire(
         "El Padre se dio de baja correctate",

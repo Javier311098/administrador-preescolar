@@ -34,9 +34,9 @@ export const Items = () => {
         Clases
       </NavLink>
 
-      <NavLink to="/calificaciones" className="nav-link">
+      {/* <NavLink to="/alumnos/calificaciones" className="nav-link">
         Calificaciones
-      </NavLink>
+      </NavLink> */}
 
       <NavLink to="/periodos" className="nav-link">
         Periodos

@@ -17,6 +17,9 @@ export const calificacionesSlice = createSlice({
       state.isLoading = false;
       state.listaCalificaciones = payload;
     },
+    reiniciarCalificaciones: (state) => {
+      state.listaCalificaciones = [];
+    },
     crearCalificacion: (state, { payload }) => {
       state.listaCalificaciones = [...state.listaCalificaciones, payload];
       state.isModalOpen = false;
@@ -45,6 +48,7 @@ export const calificacionesSlice = createSlice({
 export const {
   cargando,
   setCalificaciones,
+  reiniciarCalificaciones,
   crearCalificacion,
   darBaja,
   editarCalificacion,

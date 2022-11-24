@@ -10,6 +10,7 @@ import { ListaAlumnos } from "./ListaAlumnos";
 import { obtenerAlumnos } from "../../store/slicers/alumnosActions";
 import { AgregarAlumno } from "./AgregarAlumno";
 import { obtenerGrados } from "../../store/slicers/gradosActions";
+import { reiniciarCalificaciones } from "../../store/slicers/calificacionesSlice";
 
 export const AlumnosScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
@@ -21,6 +22,7 @@ export const AlumnosScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(reiniciarCalificaciones());
     dispatch(obtenerAlumnos());
     dispatch(obtenerGrados());
   }, []);

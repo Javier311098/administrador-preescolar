@@ -8,31 +8,29 @@ import {
   setCalificaciones,
 } from "./calificacionesSlice";
 
-export const obtenerCalificaciones = () => {
+export const obtenerCalificaciones = (idAlumno, idPeriodo) => {
   return async (dispatch) => {
     dispatch(cargando());
 
     try {
-      const { data } = await calificacionesApi.get();
-      dispatch(setCalificaciones(data.calificacion));
+      const { data } = await calificacionesApi.get(
+        `/alumno/${idAlumno}/${idPeriodo}`
+      );
+      dispatch(setCalificaciones(data.calificaciones));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
     }
   };
 };
 
-export const comenzarCrearCalificacion = (calificacion, idAlumno) => {
+export const comenzarCrearCalificacion = (calificacion) => {
   return async (dispatch) => {
     try {
       const { data } = await calificacionesApi.post("/", {
         ...calificacion,
       });
-      await calificacionesApi.post("/relacion/tutor/", {
-        id_usuario_estudiante: idAlumno,
-        id_usuario_tutor: data.usuario.id_usuario,
-      });
-
-      dispatch(crearCalificacion(data.usuario));
+      console.log(data);
+      dispatch(crearCalificacion(data.calificacion));
       Swal.fire(
         "Calificacion Creado",
         "se creo el Calificacion correctamente",

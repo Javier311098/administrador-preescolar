@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm } from "../../hooks/useForm";
-import { FormLabel, Table } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import { comenzarCrearCalificacion } from "../../store/slicers/calificacionesActions";
+import { useForm } from "react-hook-form";
 const validaciones = {
   periodo: [(value) => value > 0, "Se debe registrar un periodo"],
   calificacion: [
@@ -34,57 +34,44 @@ export const AgregarCalificacion = ({ cerrarModales }) => {
 
   const listaCalificaciones = ["EXCELENTE", "MUY BIEN", "BIEN", "REGULAR"];
   const alumno = JSON.parse(localStorage.getItem("alumno"));
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
 
-  const [formLoginValues, handleLoginInputChange, validacion, isValid] =
-    useForm(
-      {
-        periodo: "",
-
-        calificacion: "",
-        materia: "",
-        materias: listaMaterias.map((materia) =>
-          materia.nombre_materia.toLowerCase().replace(" ", "_")
-        ),
-      },
-      validaciones
-    );
-
-  const { periodo, calificacion, materia, materias } = formLoginValues;
-  const { periodoValid, calificacionValid, materiaValid } = validacion;
   const dispach = useDispatch();
 
-  console.log(materias);
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log(data.periodo);
 
-  const submit = (e) => {
-    e.preventDefault();
-    setFormSubmitted(true);
-
-    if (isValid) {
+    listaMaterias.map((materia) => {
       const nuevaCalificacion = {
-        id_periodo: periodo,
+        id_periodo: data.periodo,
         id_usuario: alumno.id_usuario,
-        calificacion: calificacion,
-        id_materia: materia,
+        calificacion: data[materia.id_materia],
+        id_materia: materia.id_materia,
       };
+      console.log(nuevaCalificacion);
       dispach(comenzarCrearCalificacion(nuevaCalificacion));
-      cerrarModales();
-    }
+    });
   };
-
   return (
     <>
-      <form onSubmit={submit} className="form-container ">
+      <form onSubmit={handleSubmit(onSubmit)} className="form-container ">
         <Grid container item xs={12} sx={{ mt: 2 }}>
           <TextField
             label="Periodo"
             select
             type="text"
-            name="periodo"
-            value={periodo}
+            // name="periodo"
             fullWidth
-            onChange={handleLoginInputChange}
-            error={!!periodoValid && formSubmitted}
-            helperText={formSubmitted && periodoValid}
+            {...register("periodo", { required: "Debe registrar un periodo" })}
+            // value={periodo}
+            // onChange={handleLoginInputChange}
+            error={errors.periodo}
+            helperText={errors.periodo?.message}
           >
             {listaPeriodos.map((periodo) => (
               <MenuItem key={periodo.id_periodo} value={periodo.id_periodo}>
@@ -120,12 +107,15 @@ export const AgregarCalificacion = ({ cerrarModales }) => {
                         label="Calificacion"
                         select
                         type="text"
-                        name={materias[index]}
-                        value={calificacion}
+                        name="calificacion"
                         fullWidth
-                        onChange={handleLoginInputChange}
-                        error={!!calificacionValid && formSubmitted}
-                        helperText={formSubmitted && calificacionValid}
+                        {...register(`${materia.id_materia}`, {
+                          required: "Se debe registrar",
+                        })}
+                        // value={calificacion}
+                        // onChange={handleLoginInputChange}
+                        error={errors[materia.id_materia]}
+                        helperText={errors[materia.id_materia]?.message}
                       >
                         {listaCalificaciones.map((calificacion) => (
                           <MenuItem key={calificacion} value={calificacion}>

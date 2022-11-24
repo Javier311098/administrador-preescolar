@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { seleccionarCalificacion } from "../../store/slicers/calificacionesSlice";
 import { Modal } from "../Modal/Modal";
 import { ModalEliminar } from "../Modal/ModalEliminar";
 import { EditarCalificacion } from "./EditarCalificacion";
-import { comenzarBajaCalificacion } from "../../store/slicers/calificacionesActions";
+import {
+  comenzarBajaCalificacion,
+  obtenerCalificaciones,
+} from "../../store/slicers/calificacionesActions";
 import { MdDelete, MdModeEdit } from "react-icons/md";
+import { GiSchoolBag } from "react-icons/gi";
+import "./calificacion.css";
 
 export const ListaCalificaciones = ({ calificaciones = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
@@ -14,12 +18,17 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
   const { calificacionSeleccionado } = useSelector(
     (state) => state.calificaciones
   );
+  const {
+    materias: { listaMaterias },
+    periodos: { listaPeriodos },
+  } = useSelector((state) => state);
+
   const [data, setData] = useState([]);
   const [term, setTerm] = useState("");
-
+  const alumno = JSON.parse(localStorage.getItem("alumno"));
   useEffect(() => {
     setData(calificaciones);
-  }, []);
+  }, [term]);
 
   const dispatch = useDispatch();
   const modalOpen = () => {
@@ -47,8 +56,8 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
   const searchingTerm = (term) => {
     return function (x) {
       return (
-        (x.nombre_calificacion &&
-          x.nombre_calificacion.toLowerCase().includes(term.toLowerCase())) ||
+        (x.calificacion &&
+          x.calificacion.toLowerCase().includes(term.toLowerCase())) ||
         !term
       );
     };
@@ -59,12 +68,29 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
       <input
         className="w-50 rounded-2 ms-3 me-3  "
         type="text"
-        placeholder={`Buscar calificaciones...`}
+        placeholder={`Buscar calificacion ejemplo (muy bien)...`}
         value={term}
         name="term"
         onChange={({ target }) => setTerm(target.value)}
       />
-      <div className="body-container ">
+
+      <div className="d-flex mt-3 mb-3 justify-content-center ">
+        {listaPeriodos.map((periodo) => (
+          <button
+            key={periodo.id_periodo}
+            className="btn btn-primary me-3"
+            onClick={() => {
+              dispatch(
+                obtenerCalificaciones(alumno.id_usuario, periodo.id_periodo)
+              );
+            }}
+          >
+            {periodo.nombre_periodo}
+          </button>
+        ))}
+      </div>
+
+      <div className="calificacion-container">
         {calificaciones.length > 0 ? (
           data.filter(searchingTerm(term)).map((calificacion) => (
             <div
@@ -72,23 +98,30 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
               style={{ width: "18rem" }}
               key={calificacion.id_calificacion}
             >
-              {/* <img
-                src={calificacionImg}
-                className="card-img-top"
-                alt="calificacion"
-              /> */}
+              <div className="imagen-container mt-3">
+                <GiSchoolBag className="calificacion-imagen" />
+              </div>
               <div className="card-body">
-                <h5 className="card-title">
-                  {calificacion.nombre_calificacion.toUpperCase()}
+                <h4 className="card-title">
+                  <b>Materia: </b>
+                  {listaMaterias.map((materia) => {
+                    if (calificacion.id_materia === materia.id_materia) {
+                      return materia.nombre_materia;
+                    }
+                  })}
+                </h4>
+                <h5 className="card-text">
+                  <b>Periodo: </b>
+                  {listaPeriodos.map((periodo) => {
+                    if (calificacion.id_periodo === periodo.id_periodo) {
+                      return periodo.nombre_periodo;
+                    }
+                  })}
                 </h5>
-                <p className="card-text">
-                  Fecha de Inicio:
-                  {moment(calificacion.inicio_calificacion).format("D/MM/yyyy")}
-                </p>
-                <p className="card-text">
-                  Fecha de Fin:
-                  {moment(calificacion.fin_calificacion).format("D/MM/yyyy")}
-                </p>
+                <h5 className="card-text">
+                  <b>Calificacion: </b>
+                  {calificacion.calificacion}
+                </h5>
 
                 <div className="d-flex justify-content-between">
                   <button

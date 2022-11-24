@@ -23,7 +23,7 @@ export const CalificacionesScreen = () => {
   const dispatch = useDispatch();
   const alumno = JSON.parse(localStorage.getItem("alumno"));
   useEffect(() => {
-    dispatch(obtenerCalificaciones());
+    // dispatch(obtenerCalificaciones());
     dispatch(obtenerAlumnos());
     dispatch(obtenerPeriodos());
     dispatch(obtenerMaterias());

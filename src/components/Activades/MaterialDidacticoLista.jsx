@@ -26,6 +26,7 @@ const columnas = [
 ];
 
 export const MaterialDidacticoLista = () => {
+  const { user } = useSelector((state) => state.auth);
   const { isLoading, listaActividades, isModalOpen } = useSelector(
     (state) => state.actividades
   );
@@ -33,7 +34,7 @@ export const MaterialDidacticoLista = () => {
 
   useEffect(() => {
     dispatch(obtenerActividades());
-    dispatch(obtenerMaterias());
+    dispatch(obtenerMaterias(user.role));
   }, []);
 
   const [modalAgregar, setModalAgregar] = useState(false);

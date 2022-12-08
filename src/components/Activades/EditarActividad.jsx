@@ -36,6 +36,11 @@ export const EditarActividad = ({ cerrarModales }) => {
   const { listaActividades, actividadSeleccionada } = useSelector(
     (state) => state.actividades
   );
+  const { user } = useSelector((state) => state.auth);
+  const listaEstatus = [
+    { id_estatus: 0, nombre_estatus: "inactivo" },
+    { id_estatus: 1, nombre_estatus: "activo" },
+  ];
   const { id_actividad, nombre_actividad, id_materia } = actividadSeleccionada;
   const fileInputRef1 = useRef();
   const fileInputRef2 = useRef();
@@ -58,12 +63,20 @@ export const EditarActividad = ({ cerrarModales }) => {
         objectivo: actividadSeleccionada.objectivo,
         instrucciones: actividadSeleccionada.instrucciones,
         materia: id_materia,
+        estatus: actividadSeleccionada.estatus,
       },
       validaciones
     );
 
-  const { nombre, material, video, objectivo, instrucciones, materia } =
-    formLoginValues;
+  const {
+    nombre,
+    material,
+    video,
+    objectivo,
+    instrucciones,
+    materia,
+    estatus,
+  } = formLoginValues;
   const {
     nombreValid,
     materialValid,
@@ -87,12 +100,9 @@ export const EditarActividad = ({ cerrarModales }) => {
         video: video,
         imagen_1: img1,
         imagen_2: img2,
+        estatus: estatus,
       };
-      // const form = new FormData(); //para subir el archivo al servidor
-      // form.append("archivo", archivo);
 
-      // console.log(actividad);
-      // console.log(form);
       dispatch(comenzarEditarActividad(actividad, id_actividad));
       cerrarModales();
     }
@@ -209,6 +219,26 @@ export const EditarActividad = ({ cerrarModales }) => {
             onChange={handleLoginInputChange}
           />
         </Grid>
+
+        {user.role === 1 && (
+          <Grid container item xs={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Estatus"
+              select
+              type="text"
+              name="estatus"
+              value={estatus}
+              fullWidth
+              onChange={handleLoginInputChange}
+            >
+              {listaEstatus.map((estatus) => (
+                <MenuItem key={estatus.id_estatus} value={estatus.id_estatus}>
+                  {estatus.nombre_estatus}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        )}
 
         <div className="d-flex justify-content-around align-items-center mt-3 imagen-container">
           <div

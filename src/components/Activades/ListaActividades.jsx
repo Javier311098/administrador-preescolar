@@ -14,6 +14,7 @@ import { seleccionarActividad } from "../../store/slicers/actividadesSlice";
 import { useNavigate } from "react-router-dom";
 
 export const ListaActividades = ({ actividades = [] }) => {
+  const { user } = useSelector((state) => state.auth);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const { actividadSeleccionada } = useSelector((state) => state.actividades);
@@ -114,18 +115,23 @@ export const ListaActividades = ({ actividades = [] }) => {
                   >
                     <MdVisibility />
                   </button>
-                  <button
-                    className="btn btn-warning "
-                    onClick={() => seleccionActividadEditar(actividad)}
-                  >
-                    <MdModeEdit />
-                  </button>
-                  <button
-                    className="btn btn-danger "
-                    onClick={() => seleccionActividadEliminar(actividad)}
-                  >
-                    <MdDelete />
-                  </button>
+
+                  {user.role !== 4 && (
+                    <>
+                      <button
+                        className="btn btn-warning "
+                        onClick={() => seleccionActividadEditar(actividad)}
+                      >
+                        <MdModeEdit />
+                      </button>
+                      <button
+                        className="btn btn-danger "
+                        onClick={() => seleccionActividadEliminar(actividad)}
+                      >
+                        <MdDelete />
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

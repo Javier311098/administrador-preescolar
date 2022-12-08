@@ -19,11 +19,12 @@ export const ActividadesScreen = () => {
   const { isLoading, listaActividades } = useSelector(
     (state) => state.actividades
   );
+  const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(obtenerMaterias());
-    dispatch(obtenerActividades());
+    dispatch(obtenerMaterias(user.role));
+    dispatch(obtenerActividades(user.role));
   }, []);
 
   return (

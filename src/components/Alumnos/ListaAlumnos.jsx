@@ -11,6 +11,7 @@ import { EditarAlumno } from "./EditarAlumno";
 import { comenzarBajaAlumno } from "../../store/slicers/alumnosActions";
 
 export const ListaAlumnos = ({ alumnos = [] }) => {
+  const { user } = useSelector((state) => state.auth);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const { alumnoSeleccionado } = useSelector((state) => state.alumnos);
@@ -121,18 +122,22 @@ export const ListaAlumnos = ({ alumnos = [] }) => {
                     <MdVisibility />
                   </Link>
 
-                  <button
-                    className="btn btn-warning "
-                    onClick={() => seleccionAlumnoEditar(alumno)}
-                  >
-                    <MdModeEdit />
-                  </button>
-                  <button
-                    className="btn btn-danger justify-content-between"
-                    onClick={() => seleccionAlumnoEliminar(alumno)}
-                  >
-                    <MdDelete />
-                  </button>
+                  {user.role !== 4 && (
+                    <>
+                      <button
+                        className="btn btn-warning "
+                        onClick={() => seleccionAlumnoEditar(alumno)}
+                      >
+                        <MdModeEdit />
+                      </button>
+                      <button
+                        className="btn btn-danger justify-content-between"
+                        onClick={() => seleccionAlumnoEliminar(alumno)}
+                      >
+                        <MdDelete />
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

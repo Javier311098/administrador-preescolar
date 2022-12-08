@@ -107,6 +107,7 @@ export const ListaPeriodos = ({ periodos = [] }) => {
       <Modal
         show={modalEditar}
         dismiss={modalOpen}
+        estiloContainer="periodo-modal"
         header={"Editar Periodo"}
         body={<EditarPeriodo cerrarModales={modalOpen} />}
       />

@@ -15,6 +15,11 @@ import { comenzarEditarCalificacion } from "../../store/slicers/calificacionesAc
 import { useForm } from "react-hook-form";
 
 export const EditarCalificacion = ({ cerrarModales }) => {
+  const { user } = useSelector((state) => state.auth);
+  const listaEstatus = [
+    { id_estatus: 0, nombre_estatus: "inactivo" },
+    { id_estatus: 1, nombre_estatus: "activo" },
+  ];
   const {
     periodos: { listaPeriodos },
     materias: { listaMaterias },
@@ -32,13 +37,12 @@ export const EditarCalificacion = ({ cerrarModales }) => {
   const dispach = useDispatch();
 
   const onSubmit = (data) => {
-    console.log(data);
-
     const nuevaCalificacion = {
       id_periodo: calificacionSeleccionada.id_periodo,
       id_usuario: calificacionSeleccionada.id_usuario,
       calificacion: data.materia,
       id_materia: calificacionSeleccionada.id_materia,
+      estatus: data.estatus,
     };
 
     dispach(
@@ -52,23 +56,6 @@ export const EditarCalificacion = ({ cerrarModales }) => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="form-container ">
-        {/* <Grid container item xs={12} sx={{ mt: 2 }}>
-          <TextField
-            label="Periodo"
-            select
-            type="text"
-            fullWidth
-            {...register("periodo", { required: "Debe registrar un periodo" })}
-            error={errors.periodo}
-            helperText={errors.periodo?.message}
-          >
-            {listaPeriodos.map((periodo) => (
-              <MenuItem key={periodo.id_periodo} value={periodo.id_periodo}>
-                {periodo.nombre_periodo}
-              </MenuItem>
-            ))}
-          </TextField>
-        </Grid> */}
         <TableContainer
           component={Paper}
           className="lista-container"
@@ -122,7 +109,24 @@ export const EditarCalificacion = ({ cerrarModales }) => {
             </TableBody>
           </Table>
         </TableContainer>
-
+        {user.role === 1 && (
+          <Grid container item xs={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Estatus"
+              select
+              type="text"
+              defaultValue={calificacionSeleccionada.estatus}
+              {...register("estatus")}
+              fullWidth
+            >
+              {listaEstatus.map((estatus) => (
+                <MenuItem key={estatus.id_estatus} value={estatus.id_estatus}>
+                  {estatus.nombre_estatus}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        )}
         {
           <button className="btn btn-primary mt-3" type="submit">
             Editar

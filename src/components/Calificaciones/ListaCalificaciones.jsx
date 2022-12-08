@@ -23,6 +23,7 @@ import {
 export const ListaCalificaciones = ({ calificaciones = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
+  const { user } = useSelector((state) => state.auth);
   const { calificacionSeleccionada } = useSelector(
     (state) => state.calificaciones
   );
@@ -71,7 +72,11 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
             className="btn btn-primary me-3"
             onClick={() => {
               dispatch(
-                obtenerCalificaciones(alumno.id_usuario, periodo.id_periodo)
+                obtenerCalificaciones(
+                  alumno.id_usuario,
+                  periodo.id_periodo,
+                  user.role
+                )
               );
             }}
           >
@@ -97,7 +102,9 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
                   <TableRow>
                     <TableCell scope="col">Materia</TableCell>
                     <TableCell scope="col">Calificacion</TableCell>
-                    <TableCell scope="col">Acciones</TableCell>
+                    {user.role !== 4 && (
+                      <TableCell scope="col">Acciones</TableCell>
+                    )}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -116,24 +123,27 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
                       <TableCell scope="col">
                         {calificacion.calificacion}
                       </TableCell>
-                      <TableCell scope="col">
-                        <button
-                          className="btn btn-warning me-2"
-                          onClick={() =>
-                            seleccionCalificacionEditar(calificacion)
-                          }
-                        >
-                          <MdModeEdit />
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() =>
-                            seleccionCalificacionEliminar(calificacion)
-                          }
-                        >
-                          <MdDelete />
-                        </button>
-                      </TableCell>
+
+                      {user.role !== 4 && (
+                        <TableCell scope="col">
+                          <button
+                            className="btn btn-warning me-2"
+                            onClick={() =>
+                              seleccionCalificacionEditar(calificacion)
+                            }
+                          >
+                            <MdModeEdit />
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() =>
+                              seleccionCalificacionEliminar(calificacion)
+                            }
+                          >
+                            <MdDelete />
+                          </button>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>

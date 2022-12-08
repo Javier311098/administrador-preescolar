@@ -10,6 +10,7 @@ import claseImg from "../../imagenes/clase.jpeg";
 import { useNavigate } from "react-router-dom";
 import "./clases.css";
 export const ListaClases = ({ clases = [] }) => {
+  const { user } = useSelector((state) => state.auth);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const navigate = useNavigate();
@@ -124,25 +125,30 @@ export const ListaClases = ({ clases = [] }) => {
                   })}
                 </p>
 
-                <div className="d-flex justify-content-between">
+                <div className="d-flex justify-content-around">
                   <button
                     onClick={() => navegarActividad(clase)}
                     className="btn btn-primary "
                   >
                     <MdVisibility />
                   </button>
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => seleccionClaseEditar(clase)}
-                  >
-                    <MdModeEdit />
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => seleccionClaseEliminar(clase)}
-                  >
-                    <MdDelete />
-                  </button>
+
+                  {user.role !== 4 && (
+                    <>
+                      <button
+                        className="btn btn-warning"
+                        onClick={() => seleccionClaseEditar(clase)}
+                      >
+                        <MdModeEdit />
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => seleccionClaseEliminar(clase)}
+                      >
+                        <MdDelete />
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

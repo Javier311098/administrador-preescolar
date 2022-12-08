@@ -7,6 +7,8 @@ import { EditarGrado } from "./EditarGrado";
 import { MdDelete, MdModeEdit } from "react-icons/md";
 import gradoImg from "../../imagenes/grado.jpeg";
 import { comenzarBajaGrado } from "../../store/slicers/gradosActions";
+import "./grado.css";
+
 export const ListaGrados = ({ grados = [] }) => {
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
@@ -96,6 +98,7 @@ export const ListaGrados = ({ grados = [] }) => {
       </div>
       <Modal
         show={modalEditar}
+        estiloContainer="grado-modal"
         dismiss={modalOpen}
         header={"Editar Grado"}
         body={<EditarGrado cerrarModales={modalOpen} />}

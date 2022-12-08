@@ -8,12 +8,12 @@ import {
   setMaterias,
 } from "./materiasSlice";
 
-export const obtenerMaterias = () => {
+export const obtenerMaterias = (role) => {
   return async (dispatch) => {
     dispatch(cargando());
 
     try {
-      const { data } = await materiasApi.get("/");
+      const { data } = await materiasApi.get(`/${role}`);
       dispatch(setMaterias(data.materias));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
@@ -40,12 +40,13 @@ export const comenzarCrearMateria = (nombre, descripcion) => {
   };
 };
 
-export const comenzarEditarMateria = (nombre, descripcion, id) => {
+export const comenzarEditarMateria = (nombre, descripcion, estatus = 1, id) => {
   return async (dispatch) => {
     try {
       const { data } = await materiasApi.put(`/${id}`, {
         nombre_materia: nombre,
         descripcion,
+        estatus,
       });
       dispatch(editarMateria(data.materia[1][0]));
       console.log(data.materia[1][0]);

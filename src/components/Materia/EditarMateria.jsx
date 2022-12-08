@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material";
+import { Grid, MenuItem, TextField } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
@@ -17,6 +17,11 @@ const validaciones = {
 
 export const EditarMateria = ({ cerrarModales }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const listaEstatus = [
+    { id_estatus: 0, nombre_estatus: "inactivo" },
+    { id_estatus: 1, nombre_estatus: "activo" },
+  ];
   const { materiaSeleccionada } = useSelector((state) => state.materias);
   const { id_materia, nombre_materia } = materiaSeleccionada;
   const [formLoginValues, handleLoginInputChange, validacion, isValid] =
@@ -24,11 +29,12 @@ export const EditarMateria = ({ cerrarModales }) => {
       {
         nombre: nombre_materia,
         descripcion: materiaSeleccionada.descripcion,
+        estatus: materiaSeleccionada.estatus,
       },
       validaciones
     );
 
-  const { nombre, descripcion } = formLoginValues;
+  const { nombre, descripcion, estatus } = formLoginValues;
   const { nombreValid, descripcionValid } = validacion;
   const dispach = useDispatch();
 
@@ -36,7 +42,7 @@ export const EditarMateria = ({ cerrarModales }) => {
     e.preventDefault();
     setFormSubmitted(true);
     if (isValid) {
-      dispach(comenzarEditarMateria(nombre, descripcion, id_materia));
+      dispach(comenzarEditarMateria(nombre, descripcion, estatus, id_materia));
       cerrarModales();
     }
   };
@@ -69,6 +75,27 @@ export const EditarMateria = ({ cerrarModales }) => {
             helperText={formSubmitted && descripcionValid}
           />
         </Grid>
+
+        {user.role === 1 && (
+          <Grid container item xs={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Estatus"
+              select
+              type="text"
+              name="estatus"
+              value={estatus}
+              fullWidth
+              onChange={handleLoginInputChange}
+            >
+              {listaEstatus.map((estatus) => (
+                <MenuItem key={estatus.id_estatus} value={estatus.id_estatus}>
+                  {estatus.nombre_estatus}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        )}
+
         <button className="btn btn-primary mt-3" type="submit">
           Editar
         </button>

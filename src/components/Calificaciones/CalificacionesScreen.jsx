@@ -13,7 +13,7 @@ import { obtenerMaterias } from "../../store/slicers/materiasActions";
 
 export const CalificacionesScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const modalOpen = () => {
     setModalAgregar(false);
   };
@@ -25,7 +25,7 @@ export const CalificacionesScreen = () => {
   useEffect(() => {
     dispatch(obtenerAlumnos());
     dispatch(obtenerPeriodos());
-    dispatch(obtenerMaterias());
+    dispatch(obtenerMaterias(user.role));
   }, []);
 
   return (

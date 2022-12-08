@@ -10,6 +10,7 @@ import { TbMath } from "react-icons/tb";
 import "./materias.css";
 
 export const ListaMaterias = ({ materias = [] }) => {
+  const { user } = useSelector((state) => state.auth);
   const [modalEditar, setModalEditar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState(false);
   const { materiaSeleccionada } = useSelector((state) => state.materias);
@@ -76,20 +77,23 @@ export const ListaMaterias = ({ materias = [] }) => {
               <div className="card-body">
                 <h5 className="card-title">{materia.nombre_materia}</h5>
                 <p className="card-text">{materia.descripcion}</p>
-                <div className="d-flex justify-content-around">
-                  <button
-                    className="btn btn-warning mt-2"
-                    onClick={() => seleccionMateriaEditar(materia)}
-                  >
-                    <MdModeEdit />
-                  </button>
-                  <button
-                    className="btn btn-danger mt-2"
-                    onClick={() => seleccionMateriaEliminar(materia)}
-                  >
-                    <MdDelete />
-                  </button>
-                </div>
+
+                {user.role !== 4 && (
+                  <div className="d-flex justify-content-around">
+                    <button
+                      className="btn btn-warning mt-2"
+                      onClick={() => seleccionMateriaEditar(materia)}
+                    >
+                      <MdModeEdit />
+                    </button>
+                    <button
+                      className="btn btn-danger mt-2"
+                      onClick={() => seleccionMateriaEliminar(materia)}
+                    >
+                      <MdDelete />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))

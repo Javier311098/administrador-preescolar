@@ -66,14 +66,14 @@ export const AgregarPeriodo = ({ cerrarModales }) => {
           selected={fechaInicio}
           onChange={handleFechaInicio}
           locale="es"
-          dateFormat="dd//MM/yyyy"
+          dateFormat="dd/MM/yyyy"
         />
         <FormLabel>Fecha de Fin:</FormLabel>
         <DatePicker
           selected={fechaFin}
           onChange={handleFechaFin}
           locale="es"
-          dateFormat="dd//MM/yyyy"
+          dateFormat="dd/MM/yyyy"
         />
         <button className="btn btn-primary mt-3" type="submit">
           Agregar

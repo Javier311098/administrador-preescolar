@@ -10,7 +10,7 @@ import { Spinner } from "../Spinner/Spinner";
 
 export const MateriaScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const modalOpen = () => {
     setModalAgregar(false);
   };
@@ -18,7 +18,7 @@ export const MateriaScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(obtenerMaterias());
+    dispatch(obtenerMaterias(user.role));
   }, []);
 
   return (

@@ -7,6 +7,7 @@ import { Spinner } from "../Spinner/Spinner";
 import { ListaPeriodos } from "./ListaPeriodos";
 import { AgregarPeriodo } from "./AgregarPeriodo";
 import { obtenerPeriodos } from "../../store/slicers/periodosActions";
+import "./periodo.css";
 
 export const PeriodosScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
@@ -35,6 +36,7 @@ export const PeriodosScreen = () => {
           <Modal
             show={modalAgregar}
             dismiss={modalOpen}
+            estiloContainer="periodo-modal"
             header={"Agregar Periodo"}
             body={<AgregarPeriodo cerrarModales={modalOpen} />}
           />

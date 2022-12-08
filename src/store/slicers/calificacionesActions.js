@@ -8,13 +8,13 @@ import {
   setCalificaciones,
 } from "./calificacionesSlice";
 
-export const obtenerCalificaciones = (idAlumno, idPeriodo) => {
+export const obtenerCalificaciones = (idAlumno, idPeriodo, roleId) => {
   return async (dispatch) => {
     dispatch(cargando());
 
     try {
       const { data } = await calificacionesApi.get(
-        `/alumno/${idAlumno}/${idPeriodo}`
+        `/alumno/${idAlumno}/${idPeriodo}/${roleId}`
       );
       dispatch(setCalificaciones(data.calificaciones));
     } catch (error) {

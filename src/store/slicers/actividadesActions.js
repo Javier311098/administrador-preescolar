@@ -11,26 +11,13 @@ import {
   setActividades,
 } from "./actividadesSlice";
 
-export const obtenerActividades = () => {
+export const obtenerActividades = (role) => {
   return async (dispatch) => {
     dispatch(cargando());
 
     try {
-      const { data } = await actividadesApi.get("/");
+      const { data } = await actividadesApi.get(`/${role}`);
       dispatch(setActividades(data.actividades));
-    } catch (error) {
-      Swal.fire("Error en la carga", "Contacte al administrador", "error");
-    }
-  };
-};
-
-export const obtenerActividPorId = () => {
-  return async (dispatch) => {
-    dispatch(cargando());
-
-    try {
-      const { data } = await actividadesApi.get("/");
-      dispatch(seleccionarActividad(data.actividad));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
     }

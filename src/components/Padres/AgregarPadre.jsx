@@ -69,6 +69,7 @@ export const AgregarPadre = ({ cerrarModales }) => {
         foto_usuario: img1,
       };
       const idAlumno = alumno;
+      console.log({ idAlumno });
       dispach(comenzarCrearPadre(padre, idAlumno));
       cerrarModales();
     }

@@ -20,6 +20,12 @@ export const Items = () => {
           <NavLink to="padres" className="nav-link">
             Padres
           </NavLink>
+          <NavLink to="/periodos" className="nav-link">
+            Periodos
+          </NavLink>
+          <NavLink to="/grados" className="nav-link">
+            Grados
+          </NavLink>
         </>
       )}
 
@@ -30,20 +36,15 @@ export const Items = () => {
       <NavLink to="/" className="nav-link">
         Materias
       </NavLink>
-      <NavLink to="/actividades" className="nav-link">
-        Actividades
-      </NavLink>
+
       <NavLink to="/clases" className="nav-link">
         Clases
       </NavLink>
 
       {user.role !== 4 && (
         <>
-          <NavLink to="/periodos" className="nav-link">
-            Periodos
-          </NavLink>
-          <NavLink to="/grados" className="nav-link">
-            Grados
+          <NavLink to="/actividades" className="nav-link">
+            Actividades
           </NavLink>
         </>
       )}

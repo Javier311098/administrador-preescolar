@@ -8,12 +8,12 @@ import {
   setPeriodos,
 } from "./periodosSlice";
 
-export const obtenerPeriodos = () => {
+export const obtenerPeriodos = (role) => {
   return async (dispatch) => {
     dispatch(cargando());
 
     try {
-      const { data } = await periodosApi.get("/");
+      const { data } = await periodosApi.get(`/${role}`);
       dispatch(setPeriodos(data.periodos));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
@@ -41,13 +41,14 @@ export const comenzarCrearPeriodo = (nombre, inicio, fin) => {
   };
 };
 
-export const comenzarEditarPeriodo = (nombre, inicio, fin, id) => {
+export const comenzarEditarPeriodo = (nombre, inicio, fin, id, estatus) => {
   return async (dispatch) => {
     try {
       const { data } = await periodosApi.put(`/${id}`, {
         nombre_periodo: nombre,
         inicio_periodo: inicio,
         fin_periodo: fin,
+        estatus: estatus,
       });
       dispatch(editarPeriodo(data.periodo[1][0]));
       Swal.fire(

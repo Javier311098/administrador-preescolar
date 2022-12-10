@@ -8,12 +8,12 @@ import {
   setGrados,
 } from "./gradosSlice";
 
-export const obtenerGrados = () => {
+export const obtenerGrados = (role) => {
   return async (dispatch) => {
     dispatch(cargando());
 
     try {
-      const { data } = await gradosApi.get("/");
+      const { data } = await gradosApi.get(`/${role}`);
       dispatch(setGrados(data.grados));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
@@ -35,11 +35,12 @@ export const comenzarCrearGrado = (nombre) => {
   };
 };
 
-export const comenzarEditarGrado = (nombre, id) => {
+export const comenzarEditarGrado = (nombre, id, estatus) => {
   return async (dispatch) => {
     try {
       const { data } = await gradosApi.put(`/${id}`, {
         nombre_grado: nombre,
+        estatus: estatus,
       });
       dispatch(editarGrado(data.grado));
       Swal.fire("Grado Editada", "se edito el grado correctamente", "success");

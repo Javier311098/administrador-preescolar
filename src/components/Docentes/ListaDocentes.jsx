@@ -72,7 +72,7 @@ export const ListaDocentes = ({ docentes = [] }) => {
               key={docente.id_usuario}
             >
               <div className="imagen-container mt-3">
-                {docente.foto_usuario.length > 0 ? (
+                {docente.foto_usuario?.length > 0 ? (
                   <img
                     src={docente.foto_usuario}
                     className="docente-imagen"

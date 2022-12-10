@@ -77,13 +77,13 @@ export const comenzarCrearPadre = (padre, idAlumno) => {
       const { data } = await usuarioApi.post("/", {
         ...padre,
       });
-      console.log(data);
-      const resp = await usuarioApi.post("/relacion/tutor/", {
-        id_usuario_estudiante: idAlumno,
-        id_usuario_tutor: data.id_usuario,
-      });
 
       dispatch(crearPadre(data.usuario));
+
+      await usuarioApi.post("/relacion/tutor", {
+        id_usuario_estudiante: idAlumno,
+        id_usuario_tutor: data.usuario.id_usuario,
+      });
 
       Swal.fire("Padre Creado", "se creo el Padre correctamente", "success");
     } catch (error) {

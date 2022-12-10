@@ -1,4 +1,4 @@
-import { Grid, TextField } from "@mui/material";
+import { Grid, TextField, MenuItem } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "../../hooks/useForm";
@@ -18,6 +18,11 @@ const validaciones = {
 
 export const EditarPeriodo = ({ cerrarModales }) => {
   registerLocale("es", es);
+  const { user } = useSelector((state) => state.auth);
+  const listaEstatus = [
+    { id_estatus: 0, nombre_estatus: "inactivo" },
+    { id_estatus: 1, nombre_estatus: "activo" },
+  ];
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { periodoSeleccionado } = useSelector((state) => state.periodos);
   const { id_periodo, nombre_periodo, inicio_periodo, fin_periodo } =
@@ -28,18 +33,27 @@ export const EditarPeriodo = ({ cerrarModales }) => {
     useForm(
       {
         nombre: nombre_periodo,
+        estatus: periodoSeleccionado.estatus,
       },
       validaciones
     );
 
-  const { nombre, inicio, fin } = formLoginValues;
+  const { nombre, inicio, fin, estatus } = formLoginValues;
   const { nombreValid } = validacion;
   const dispach = useDispatch();
   const submit = (e) => {
     e.preventDefault();
     setFormSubmitted(true);
     if (isValid) {
-      dispach(comenzarEditarPeriodo(nombre, fechaInicio, fechaFin, id_periodo));
+      dispach(
+        comenzarEditarPeriodo(
+          nombre,
+          fechaInicio,
+          fechaFin,
+          id_periodo,
+          estatus
+        )
+      );
       cerrarModales();
     }
   };
@@ -82,6 +96,25 @@ export const EditarPeriodo = ({ cerrarModales }) => {
           locale="es"
           dateFormat="dd/MM/yyyy"
         />
+        {user.role === 1 && (
+          <Grid container item xs={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Estatus"
+              select
+              type="text"
+              name="estatus"
+              value={estatus}
+              fullWidth
+              onChange={handleLoginInputChange}
+            >
+              {listaEstatus.map((estatus) => (
+                <MenuItem key={estatus.id_estatus} value={estatus.id_estatus}>
+                  {estatus.nombre_estatus}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        )}
         <button className="btn btn-primary mt-3" type="submit">
           Editar
         </button>

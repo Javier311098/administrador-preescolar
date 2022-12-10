@@ -8,13 +8,25 @@ import {
   setAlumnos,
 } from "./alumnosSlice";
 
-export const obtenerAlumnos = () => {
+export const obtenerAlumnos = (id, role) => {
   return async (dispatch) => {
     dispatch(cargando());
-
     try {
-      const { data } = await usuarioApi.get("/rol/3");
-      dispatch(setAlumnos(data.usuario));
+      if (id) {
+        if (role === 4) {
+          const { data } = await usuarioApi.get(`/relacion/padre/${id}`);
+
+          dispatch(setAlumnos([data.hijo]));
+        }
+        if (role === 2) {
+          const { data } = await usuarioApi.get(`/relacion/docente/${id}`);
+
+          dispatch(setAlumnos(data.estudiantes));
+        }
+      } else {
+        const { data } = await usuarioApi.get("/rol/3");
+        dispatch(setAlumnos(data.usuario));
+      }
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
     }

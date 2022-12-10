@@ -5,7 +5,10 @@ import { BotonesArriba } from "../Botones/BotonesArriba";
 import { useDispatch, useSelector } from "react-redux";
 import { Spinner } from "../Spinner/Spinner";
 import { AgregarClase } from "./AgregarClase";
-import { obtenerClases } from "../../store/slicers/clasesActions";
+import {
+  obtenerClasePorGrado,
+  obtenerClases,
+} from "../../store/slicers/clasesActions";
 import { ListaClases } from "./ListaClases";
 import { obtenerPeriodos } from "../../store/slicers/periodosActions";
 import { obtenerActividades } from "../../store/slicers/actividadesActions";
@@ -13,7 +16,7 @@ import { obtenerGrados } from "../../store/slicers/gradosActions";
 
 export const ClasesScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const modalOpen = () => {
     setModalAgregar(false);
   };
@@ -21,10 +24,14 @@ export const ClasesScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(obtenerClases());
-    dispatch(obtenerGrados());
-    dispatch(obtenerPeriodos());
-    dispatch(obtenerActividades());
+    if (user.role !== 1) {
+      dispatch(obtenerClasePorGrado(user.uid, user.role));
+    } else {
+      dispatch(obtenerClases(user.role));
+    }
+    dispatch(obtenerGrados(user.role));
+    dispatch(obtenerPeriodos(user.role));
+    dispatch(obtenerActividades(user.role));
   }, []);
 
   return (

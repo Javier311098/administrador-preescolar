@@ -65,6 +65,7 @@ export const ListaCalificaciones = ({ calificaciones = [] }) => {
 
   return (
     <>
+      <h3 className="text-center">Visualizar calificación por periodo</h3>
       <div className="d-flex mt-3 mb-3 justify-content-center ">
         {listaPeriodos.map((periodo) => (
           <button

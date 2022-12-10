@@ -127,12 +127,14 @@ export const ListaAlumnos = ({ alumnos = [] }) => {
                       <button
                         className="btn btn-warning "
                         onClick={() => seleccionAlumnoEditar(alumno)}
+                        disabled={user.role !== 1 ? true : false}
                       >
                         <MdModeEdit />
                       </button>
                       <button
                         className="btn btn-danger justify-content-between"
                         onClick={() => seleccionAlumnoEliminar(alumno)}
+                        disabled={user.role !== 1 ? true : false}
                       >
                         <MdDelete />
                       </button>

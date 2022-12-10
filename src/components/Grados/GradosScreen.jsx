@@ -10,7 +10,7 @@ import { AgregarGrado } from "./AgregarGrado";
 
 export const GradosScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const modalOpen = () => {
     setModalAgregar(false);
   };
@@ -18,7 +18,7 @@ export const GradosScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(obtenerGrados());
+    dispatch(obtenerGrados(user.role));
   }, []);
 
   return (

@@ -7,14 +7,17 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Spinner } from "../Spinner/Spinner";
 import { ListaAlumnos } from "./ListaAlumnos";
-import { obtenerAlumnos } from "../../store/slicers/alumnosActions";
+import {
+  obtenerAlumnos,
+  obtenerEstudiantes,
+} from "../../store/slicers/alumnosActions";
 import { AgregarAlumno } from "./AgregarAlumno";
 import { obtenerGrados } from "../../store/slicers/gradosActions";
 import { reiniciarCalificaciones } from "../../store/slicers/calificacionesSlice";
 
 export const AlumnosScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const modalOpen = () => {
     setModalAgregar(false);
   };
@@ -22,9 +25,13 @@ export const AlumnosScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (user.role === 4 || user.role === 2) {
+      dispatch(obtenerAlumnos(user.uid, user.role));
+    } else {
+      dispatch(obtenerAlumnos());
+    }
     dispatch(reiniciarCalificaciones());
-    dispatch(obtenerAlumnos());
-    dispatch(obtenerGrados());
+    dispatch(obtenerGrados(user.role));
   }, []);
 
   return (

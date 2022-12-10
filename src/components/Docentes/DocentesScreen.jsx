@@ -13,7 +13,7 @@ import { obtenerGrados } from "../../store/slicers/gradosActions";
 
 export const DocentesScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const modalOpen = () => {
     setModalAgregar(false);
   };
@@ -22,7 +22,7 @@ export const DocentesScreen = () => {
 
   useEffect(() => {
     dispatch(obtenerDocentes());
-    dispatch(obtenerGrados());
+    dispatch(obtenerGrados(user.role));
   }, []);
 
   return (

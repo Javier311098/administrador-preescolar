@@ -8,12 +8,25 @@ import {
   setClases,
 } from "./clasesSlice";
 
-export const obtenerClases = () => {
+export const obtenerClases = (role) => {
   return async (dispatch) => {
     dispatch(cargando());
 
     try {
-      const { data } = await clasesApi.get();
+      const { data } = await clasesApi.get(`/${role}`);
+      dispatch(setClases(data.clases));
+    } catch (error) {
+      Swal.fire("Error en la carga", "Contacte al administrador", "error");
+    }
+  };
+};
+
+export const obtenerClasePorGrado = (id, role) => {
+  return async (dispatch) => {
+    dispatch(cargando());
+
+    try {
+      const { data } = await clasesApi.get(`/grado/${id}/${role}`);
       dispatch(setClases(data.clases));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");

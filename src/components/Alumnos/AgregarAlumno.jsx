@@ -26,6 +26,7 @@ const tipo = ["A+", "A-", "O+", "O-", "AB+", "AB-", "B+", "B-"];
 
 export const AgregarAlumno = ({ cerrarModales }) => {
   registerLocale("es", es);
+  const { user } = useSelector((state) => state.auth);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const { listaGrados } = useSelector((state) => state.grados);
   const fileInputRef1 = useRef();
@@ -237,7 +238,11 @@ export const AgregarAlumno = ({ cerrarModales }) => {
               onChange={cargarImagen}
               style={{ display: "none" }}
             />
-            <button className="btn btn-primary mt-5" type="submit">
+            <button
+              className="btn btn-primary mt-5"
+              type="submit"
+              disabled={user.role !== 1 ? true : false}
+            >
               Agregar
             </button>
           </div>

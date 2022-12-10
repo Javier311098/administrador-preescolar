@@ -11,7 +11,7 @@ import "./periodo.css";
 
 export const PeriodosScreen = () => {
   const [modalAgregar, setModalAgregar] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const modalOpen = () => {
     setModalAgregar(false);
   };
@@ -19,7 +19,7 @@ export const PeriodosScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(obtenerPeriodos());
+    dispatch(obtenerPeriodos(user.role));
   }, []);
 
   return (

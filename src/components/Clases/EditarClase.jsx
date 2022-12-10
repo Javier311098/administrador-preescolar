@@ -12,6 +12,11 @@ const validaciones = {
 
 export const EditarClase = ({ cerrarModales }) => {
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const { user } = useSelector((state) => state.auth);
+  const listaEstatus = [
+    { id_estatus: 0, nombre_estatus: "inactivo" },
+    { id_estatus: 1, nombre_estatus: "activo" },
+  ];
   const {
     grados: { listaGrados },
     periodos: { listaPeriodos },
@@ -24,11 +29,13 @@ export const EditarClase = ({ cerrarModales }) => {
         grado: claseSeleccionada.id_grado,
         periodo: claseSeleccionada.id_periodo,
         actividad: claseSeleccionada.id_actividad,
+        estatus: claseSeleccionada.estatus,
       },
       validaciones
     );
 
-  const { estudianteDocente, grado, periodo, actividad } = formLoginValues;
+  const { estudianteDocente, grado, periodo, actividad, estatus } =
+    formLoginValues;
   const { gradoValid, periodoValid, actividadValid } = validacion;
   const dispach = useDispatch();
   const submit = (e) => {
@@ -40,6 +47,7 @@ export const EditarClase = ({ cerrarModales }) => {
         id_grado: grado,
         id_periodo: periodo,
         id_actividad: actividad,
+        estatus: estatus,
       };
       dispach(comenzarEditarClase(clase, claseSeleccionada.id_clase));
       cerrarModales();
@@ -109,6 +117,25 @@ export const EditarClase = ({ cerrarModales }) => {
             ))}
           </TextField>
         </Grid>
+        {user.role === 1 && (
+          <Grid container item xs={12} sx={{ mt: 2 }}>
+            <TextField
+              label="Estatus"
+              select
+              type="text"
+              name="estatus"
+              value={estatus}
+              fullWidth
+              onChange={handleLoginInputChange}
+            >
+              {listaEstatus.map((estatus) => (
+                <MenuItem key={estatus.id_estatus} value={estatus.id_estatus}>
+                  {estatus.nombre_estatus}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        )}
         <button className="btn btn-primary mt-3" type="submit">
           Editar
         </button>

@@ -37,9 +37,9 @@ export const ListaPadres = ({ padres = [] }) => {
   };
 
   const seleccionPadreEditar = (value) => {
-    setModalEditar(true);
     dispatch(obtenerRelacionPadre(value.id_usuario));
     dispatch(seleccionarPadre(value));
+    setModalEditar(true);
   };
 
   const eliminar = () => {

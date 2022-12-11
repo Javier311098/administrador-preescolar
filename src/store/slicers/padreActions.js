@@ -64,7 +64,8 @@ export const obtenerRelacionPadre = (id) => {
     dispatch(cargandoData());
     try {
       const { data } = await usuarioApi.get(`/relacion/padre/${id}`);
-      dispatch(seleccionarAlumno(data.alumnoSeleccionado));
+
+      dispatch(seleccionarAlumno(data.hijo));
     } catch (error) {
       Swal.fire("Error en la carga", "Contacte al administrador", "error");
     }
